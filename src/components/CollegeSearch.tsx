@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, ChevronDown, ChevronUp, MapPin, Building2, GraduationCap, ArrowLeft } from 'lucide-react';
+import { Search, X, ChevronDown, ChevronUp, MapPin, Building2, GraduationCap, ArrowLeft, SlidersHorizontal } from 'lucide-react';
 import { CollegeRecord } from '../types';
 
 interface CollegeSearchProps {
@@ -25,6 +25,8 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
   const [district, setDistrict]   = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
+  const [cutoffMin, setCutoffMin] = useState('');
+  const [cutoffMax, setCutoffMax] = useState('');
 
   const handleRegionChange = (val: string) => {
     setRegion(val);
@@ -66,10 +68,23 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
+    const minPct = cutoffMin !== '' ? parseFloat(cutoffMin) : null;
+    const maxPct = cutoffMax !== '' ? parseFloat(cutoffMax) : null;
     return collegeGroups.filter(g => {
       if (region !== 'All' && g.info.region !== region) return false;
       if (district !== 'All' && g.info.district !== district) return false;
       if (typeFilter !== 'All' && g.info.type !== typeFilter) return false;
+      if (minPct !== null || maxPct !== null) {
+        const hasMatch = g.branches.some(b =>
+          Object.values(b.cutoffs).some(e => {
+            if (e.percentile === null) return false;
+            if (minPct !== null && e.percentile < minPct) return false;
+            if (maxPct !== null && e.percentile > maxPct) return false;
+            return true;
+          })
+        );
+        if (!hasMatch) return false;
+      }
       if (q) {
         const nameMatch = g.info.collegeName.toLowerCase().includes(q);
         const branchMatch = g.branches.some(b => b.branch.toLowerCase().includes(q));
@@ -78,7 +93,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
       }
       return true;
     });
-  }, [collegeGroups, query, region, district, typeFilter]);
+  }, [collegeGroups, query, region, district, typeFilter, cutoffMin, cutoffMax]);
 
   const toggleExpand = (key: string) => {
     setExpandedCode(prev => prev === key ? null : key);
@@ -168,6 +183,38 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
             >
               {collegeTypes.map(t => <option key={t} value={t}>{t === 'All' ? 'All Types' : t}</option>)}
             </select>
+          </div>
+
+          {/* Cutoff range */}
+          <div className="flex items-center gap-1.5">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <input
+              type="number"
+              min="0" max="100" step="0.1"
+              value={cutoffMin}
+              onChange={e => setCutoffMin(e.target.value)}
+              placeholder="Min %"
+              className="border border-slate-200 px-2 py-2 rounded-lg text-xs font-semibold w-20 focus:outline-none focus:border-primary"
+              style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
+            />
+            <span className="text-slate-400 text-xs">–</span>
+            <input
+              type="number"
+              min="0" max="100" step="0.1"
+              value={cutoffMax}
+              onChange={e => setCutoffMax(e.target.value)}
+              placeholder="Max %"
+              className="border border-slate-200 px-2 py-2 rounded-lg text-xs font-semibold w-20 focus:outline-none focus:border-primary"
+              style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
+            />
+            {(cutoffMin !== '' || cutoffMax !== '') && (
+              <button
+                onClick={() => { setCutoffMin(''); setCutoffMax(''); }}
+                className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
           <span className="ml-auto text-xs font-bold text-slate-500 self-center">

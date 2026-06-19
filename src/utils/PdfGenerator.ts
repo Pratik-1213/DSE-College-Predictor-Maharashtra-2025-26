@@ -2,6 +2,104 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { PredictionResult, StudentProfile } from '../types';
 
+export function generateShortlistPdf(profile: StudentProfile, shortlist: PredictionResult[]) {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const pageWidth  = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const ml = 14, mr = 14;
+  const contentW = pageWidth - ml - mr;
+
+  // Banner
+  doc.setFillColor(124, 58, 237);
+  doc.rect(0, 0, pageWidth, 22, 'F');
+  doc.setFillColor(37, 99, 235);
+  doc.rect(0, 22, pageWidth, 2, 'F');
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(255, 255, 255);
+  doc.text('MY COLLEGE SHORTLIST — DSE MAHARASHTRA 2025-26', ml, 12);
+  doc.setFontSize(8.5);
+  doc.setFont('Helvetica', 'normal');
+  doc.text(`${profile.name}  ·  ${profile.percentage}%  ·  ${profile.category}  ·  Generated: ${new Date().toLocaleDateString('en-IN')}`, ml, 18.5);
+
+  // Table
+  autoTable(doc, {
+    startY: 32,
+    head: [['#', 'College Name', 'Branch', 'Type', 'Cutoff', 'My Prob.', 'Status']],
+    body: shortlist.map((r, i) => [
+      i + 1,
+      r.college.collegeName,
+      r.college.branch,
+      r.college.type,
+      `${r.cutoffPercent}%\n(${r.matchedCutoffCategory})`,
+      `${r.probability}%`,
+      r.chanceStatus,
+    ]),
+    theme: 'grid',
+    margin: { left: ml, right: mr },
+    headStyles: { fillColor: [124, 58, 237], fontSize: 8, fontStyle: 'bold', halign: 'center', valign: 'middle' },
+    bodyStyles: { fontSize: 7.5, textColor: [15, 23, 42], valign: 'middle' },
+    columnStyles: {
+      0: { cellWidth: 7, halign: 'center' },
+      1: { cellWidth: 60 },
+      2: { cellWidth: 50 },
+      3: { cellWidth: 22 },
+      4: { cellWidth: 18, halign: 'center' },
+      5: { cellWidth: 12, halign: 'center' },
+      6: { cellWidth: 13, halign: 'center' },
+    },
+    didParseCell(data: any) {
+      if (data.section === 'body' && data.column.index === 6) {
+        const colors: Record<string, [number, number, number]> = {
+          'Safe': [22, 101, 52], 'High Chance': [30, 58, 138],
+          'Moderate Chance': [113, 63, 18], 'Low Chance': [194, 65, 12], 'Dream': [153, 27, 27],
+        };
+        const c = colors[data.cell.text[0]];
+        if (c) { data.cell.styles.textColor = c; data.cell.styles.fontStyle = 'bold'; }
+      }
+    },
+  });
+
+  // Notes section
+  const lastY: number = (doc as any).lastAutoTable.finalY + 10;
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(37, 99, 235);
+  doc.text('Notes / Remarks', ml, lastY);
+  doc.setDrawColor(37, 99, 235);
+  doc.setLineWidth(0.3);
+  doc.line(ml, lastY + 1.5, pageWidth - mr, lastY + 1.5);
+
+  for (let i = 0; i < Math.min(shortlist.length, 15); i++) {
+    const rowY = lastY + 8 + i * 9;
+    if (rowY + 9 > pageHeight - 16) break;
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(15, 23, 42);
+    doc.text(`${i + 1}. ${shortlist[i].college.collegeName.slice(0, 55)}`, ml, rowY);
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.2);
+    doc.line(ml + 70, rowY + 1, pageWidth - mr, rowY + 1);
+  }
+
+  // Footer
+  const totalPages: number = (doc.internal as any).pages.length - 1;
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    const fy = pageHeight - 8;
+    doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+    doc.line(ml, fy - 4, pageWidth - mr, fy - 4);
+    doc.setFont('Helvetica', 'italic'); doc.setFontSize(6); doc.setTextColor(148, 163, 184);
+    doc.text('Advisory only — actual 2025-26 cutoffs may vary. Verify with the official CET Cell handbook.', ml, fy - 1);
+    doc.setFont('Helvetica', 'normal');
+    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy - 1, { align: 'right' });
+    doc.setFontSize(5.5); doc.setTextColor(203, 213, 225);
+    doc.text('Developed by Pratik Sachin Kumbhar  |  pratik.1213.coep@gmail.com', pageWidth / 2, fy + 3, { align: 'center' });
+  }
+
+  doc.save(`DSE_Shortlist_${profile.name.replace(/\s+/g, '_')}.pdf`);
+}
+
 export function generatePdfReport(
   profile: StudentProfile,
   topColleges: PredictionResult[],

@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import {
   CheckCircle, ArrowLeft, Filter, SlidersHorizontal, Download, X,
-  HelpCircle, Sparkles, Building, MapPin, Gauge, GraduationCap
+  HelpCircle, Sparkles, Building, MapPin, Gauge, GraduationCap, Bookmark, BookmarkCheck, FileText
 } from 'lucide-react';
 import { PredictionResult, StudentProfile, DashboardStats } from '../types';
 import { getDashboardStats, generateCapStrategy } from '../utils/predictionEngine';
-import { generatePdfReport } from '../utils/PdfGenerator';
+import { generatePdfReport, generateShortlistPdf } from '../utils/PdfGenerator';
 import ChartsSection from './ChartsSection';
 import ComparisonSection from './ComparisonSection';
 import CapStrategy from './CapStrategy';
@@ -13,6 +13,9 @@ import CapStrategy from './CapStrategy';
 interface ResultsDashboardProps {
   results: PredictionResult[];
   profile: StudentProfile;
+  shortlist: PredictionResult[];
+  onToggleShortlist: (item: PredictionResult) => void;
+  onClearShortlist?: () => void;
   onBack: () => void;
 }
 
@@ -24,16 +27,18 @@ const CHANCE_STYLES: Record<string, { color: string; bg: string; border: string;
   Dream: { color: '#DC2626', bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-700' },
 };
 
-export default function ResultsDashboard({ results, profile, onBack }: ResultsDashboardProps) {
+export default function ResultsDashboard({ results, profile, shortlist, onToggleShortlist, onClearShortlist, onBack }: ResultsDashboardProps) {
   const [sortBy, setSortBy] = useState<'prob' | 'cutoff' | 'govt' | 'auto'>('cutoff');
   const [filterGovt, setFilterGovt] = useState(false);
   const [filterAuto, setFilterAuto] = useState(false);
+  const [filterFemaleSeats, setFilterFemaleSeats] = useState(false);
   const [filterRegion, setFilterRegion] = useState('All');
   const [filterDistrict, setFilterDistrict] = useState('All');
   const [minProbability, setMinProbability] = useState(0);
   const [chanceFilter, setChanceFilter] = useState('All');
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
   const [compareList, setCompareList] = useState<PredictionResult[]>([]);
+  const [showShortlist, setShowShortlist] = useState(false);
 
   const uniqueRegions = useMemo(() => {
     const s = new Set<string>();
@@ -60,6 +65,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
     let list = [...results];
     if (filterGovt) list = list.filter(r => r.college.type === 'Government' || r.college.type === 'Government Autonomous' || r.college.type === 'University Department');
     if (filterAuto) list = list.filter(r => r.college.autonomous);
+    if (filterFemaleSeats) list = list.filter(r => r.matchedCutoffCategory.startsWith('L'));
     if (filterRegion !== 'All') list = list.filter(r => r.college.region === filterRegion);
     if (filterDistrict !== 'All') list = list.filter(r => r.college.district === filterDistrict);
     if (minProbability > 0) list = list.filter(r => r.probability >= minProbability);
@@ -74,7 +80,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       list.sort((a, b) => (b.college.autonomous ? 1 : 0) - (a.college.autonomous ? 1 : 0) || b.cutoffPercent - a.cutoffPercent);
     }
     return list;
-  }, [results, sortBy, filterGovt, filterAuto, filterRegion, filterDistrict, minProbability, chanceFilter]);
+  }, [results, sortBy, filterGovt, filterAuto, filterFemaleSeats, filterRegion, filterDistrict, minProbability, chanceFilter]);
 
   const stats: DashboardStats = useMemo(() => getDashboardStats(processedResults), [processedResults]);
   const strategyColleges = useMemo(() => generateCapStrategy(processedResults), [processedResults]);
@@ -126,6 +132,26 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
           </label>
         ))}
       </div>
+
+      {/* Female Seats toggle — only shown for female students */}
+      {profile.gender === 'Female' && (
+        <div className="space-y-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Seat Type</label>
+          <label className="flex items-center gap-2.5 cursor-pointer select-none">
+            <div
+              onClick={() => setFilterFemaleSeats(v => !v)}
+              className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer shrink-0 ${filterFemaleSeats ? 'bg-pink-500' : 'bg-slate-200'}`}
+            >
+              <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${filterFemaleSeats ? 'translate-x-4' : 'translate-x-0'}`} />
+            </div>
+            <span className="text-xs font-semibold text-slate-700">
+              Female Seats Only
+              {filterFemaleSeats && <span className="ml-1.5 text-[9px] font-bold bg-pink-100 text-pink-600 px-1.5 py-0.5 rounded uppercase">Active</span>}
+            </span>
+          </label>
+          <p className="text-[10px] text-slate-400 leading-relaxed">Shows only L-category seats (LOPEN, LOBC, etc.) reserved for female candidates.</p>
+        </div>
+      )}
 
       {/* Region */}
       <div className="space-y-1.5">
@@ -187,9 +213,9 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       </div>
 
       {/* Reset */}
-      {(filterGovt || filterAuto || filterRegion !== 'All' || filterDistrict !== 'All' || chanceFilter !== 'All' || minProbability > 0) && (
+      {(filterGovt || filterAuto || filterFemaleSeats || filterRegion !== 'All' || filterDistrict !== 'All' || chanceFilter !== 'All' || minProbability > 0) && (
         <button
-          onClick={() => { setFilterGovt(false); setFilterAuto(false); setFilterRegion('All'); setFilterDistrict('All'); setChanceFilter('All'); setMinProbability(0); }}
+          onClick={() => { setFilterGovt(false); setFilterAuto(false); setFilterFemaleSeats(false); setFilterRegion('All'); setFilterDistrict('All'); setChanceFilter('All'); setMinProbability(0); }}
           className="w-full text-xs font-bold text-slate-500 hover:text-red-500 border border-slate-200 hover:border-red-300 py-2 rounded-lg transition-colors cursor-pointer"
         >
           Reset Filters
@@ -220,13 +246,27 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
             </p>
           </div>
         </div>
-        <button
-          onClick={handleDownloadPdf}
-          className="btn-primary inline-flex items-center gap-2 text-xs sm:text-sm self-start sm:self-auto"
-        >
-          <Download className="w-4 h-4" />
-          <span>Download PDF</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setShowShortlist(true)}
+            className="relative inline-flex items-center gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl border border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100 font-bold transition-colors cursor-pointer"
+          >
+            <Bookmark className="w-4 h-4" />
+            <span>Shortlist</span>
+            {shortlist.length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-violet-600 text-white text-[9px] font-extrabold flex items-center justify-center">
+                {shortlist.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={handleDownloadPdf}
+            className="btn-primary inline-flex items-center gap-2 text-xs sm:text-sm"
+          >
+            <Download className="w-4 h-4" />
+            <span>Download PDF</span>
+          </button>
+        </div>
       </div>
 
       {/* ── Stats Row ────────────────────────────────────── */}
@@ -364,6 +404,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
             {processedResults.slice(0, 10).map((item, index) => {
               const cs = CHANCE_STYLES[item.chanceStatus] ?? CHANCE_STYLES['Safe'];
               const isSelected = compareList.some(c => c.college.choiceCode === item.college.choiceCode);
+              const isShortlisted = shortlist.some(s => s.college.choiceCode === item.college.choiceCode);
 
               return (
                 <div
@@ -385,15 +426,24 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
                         {item.college.region}
                       </span>
                     </div>
-                    <label className="flex items-center gap-1.5 cursor-pointer select-none text-[10px] font-bold text-slate-400 hover:text-primary transition-colors">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => handleToggleCompare(item)}
-                        className="w-3.5 h-3.5 rounded border-slate-300 accent-primary cursor-pointer"
-                      />
-                      <span>Compare</span>
-                    </label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onToggleShortlist(item)}
+                        title={isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}
+                        className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${isShortlisted ? 'text-violet-600 bg-violet-100' : 'text-slate-300 hover:text-violet-500 hover:bg-violet-50'}`}
+                      >
+                        {isShortlisted ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                      </button>
+                      <label className="flex items-center gap-1.5 cursor-pointer select-none text-[10px] font-bold text-slate-400 hover:text-primary transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleCompare(item)}
+                          className="w-3.5 h-3.5 rounded border-slate-300 accent-primary cursor-pointer"
+                        />
+                        <span>Compare</span>
+                      </label>
+                    </div>
                   </div>
 
                   {/* Body */}
@@ -424,6 +474,9 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
                         <span className="text-[9px] text-slate-400 font-medium block uppercase mb-0.5">Prev Cutoff</span>
                         <span className="text-slate-800">{item.cutoffPercent}%</span>
                         <span className="text-[8px] text-slate-400 ml-1">({item.matchedCutoffCategory})</span>
+                        {item.matchedCutoffCategory.startsWith('L') && (
+                          <span className="ml-1 text-[8px] font-bold bg-pink-100 text-pink-600 px-1 py-0.5 rounded">♀</span>
+                        )}
                       </div>
                       <div className="text-center">
                         <span className="text-[9px] text-slate-400 font-medium block uppercase mb-0.5">Your Score</span>
@@ -505,6 +558,78 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       <p className="text-[10px] text-slate-400 italic leading-relaxed pb-2">
         * Predictions are based on CAP Round I cutoffs from 2024‑25. Actual cutoffs for 2025‑26 may vary. Use this tool for advisory purposes only.
       </p>
+
+      {/* ── Shortlist Drawer ──────────────────────────────── */}
+      {showShortlist && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowShortlist(false)} />
+          <div className="relative ml-auto w-80 sm:w-96 max-w-full bg-white h-full shadow-2xl flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-slate-100 z-10">
+              <div className="flex items-center gap-2">
+                <Bookmark className="w-4 h-4 text-violet-600" />
+                <span className="font-display font-extrabold text-sm text-slate-900">My Shortlist</span>
+                <span className="text-[10px] font-bold bg-violet-100 text-violet-600 px-2 py-0.5 rounded-full">{shortlist.length}</span>
+              </div>
+              <button onClick={() => setShowShortlist(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {shortlist.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-48 text-center">
+                  <Bookmark className="w-10 h-10 text-slate-200 mb-3" />
+                  <p className="font-bold text-sm text-slate-500">No colleges shortlisted yet</p>
+                  <p className="text-[11px] text-slate-400 mt-1">Click the bookmark icon on any college card to add it here.</p>
+                </div>
+              ) : shortlist.map((item, i) => {
+                const cs = CHANCE_STYLES[item.chanceStatus] ?? CHANCE_STYLES['Safe'];
+                return (
+                  <div key={item.college.choiceCode} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex gap-3">
+                    <span className="w-5 h-5 rounded-full bg-violet-100 text-violet-600 font-extrabold text-[10px] flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display font-extrabold text-[12px] text-slate-900 leading-snug line-clamp-2">{item.college.collegeName}</p>
+                      <p className="text-[10px] text-slate-500 font-medium mt-0.5 truncate">{item.college.branch}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded border ${cs.bg} ${cs.border} ${cs.text}`}>{item.chanceStatus}</span>
+                        <span className="text-[10px] font-bold text-slate-600">{item.cutoffPercent}%</span>
+                        <span className="text-[10px] text-slate-400">cutoff</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => onToggleShortlist(item)}
+                      className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer actions */}
+            {shortlist.length > 0 && (
+              <div className="sticky bottom-0 bg-white border-t border-slate-100 p-4 space-y-2">
+                <button
+                  onClick={() => generateShortlistPdf(profile, shortlist)}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm py-3 rounded-xl transition-colors cursor-pointer"
+                >
+                  <FileText className="w-4 h-4" />
+                  Export Shortlist PDF
+                </button>
+                <button
+                  onClick={() => { if (window.confirm('Clear all shortlisted colleges?') && onClearShortlist) onClearShortlist(); }}
+                  className="w-full text-xs font-bold text-slate-400 hover:text-red-500 py-2 rounded-xl border border-slate-200 hover:border-red-200 transition-colors cursor-pointer"
+                >
+                  Clear All
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

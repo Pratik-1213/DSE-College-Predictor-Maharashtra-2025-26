@@ -20,6 +20,14 @@ export default function App() {
 
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [predictionResults, setPredictionResults] = useState<PredictionResult[]>([]);
+  const [shortlist, setShortlist] = useState<PredictionResult[]>([]);
+
+  const handleToggleShortlist = (item: PredictionResult) => {
+    setShortlist(prev => {
+      const exists = prev.some(s => s.college.choiceCode === item.college.choiceCode);
+      return exists ? prev.filter(s => s.college.choiceCode !== item.college.choiceCode) : [...prev, item];
+    });
+  };
 
   // Handle form submission
   const handleFormSubmit = (profile: StudentProfile) => {
@@ -87,6 +95,9 @@ export default function App() {
             <ResultsDashboard
               results={predictionResults}
               profile={studentProfile}
+              shortlist={shortlist}
+              onToggleShortlist={handleToggleShortlist}
+              onClearShortlist={() => setShortlist([])}
               onBack={() => setView('predict')}
             />
           </div>
