@@ -273,43 +273,58 @@ export function getDashboardStats(results: PredictionResult[]): DashboardStats {
 
 /**
  * Generates the recommended CAP Form Option Order.
- * CAP Strategy Rules:
- * - 20% Dream Colleges at the top (dream high, no harm trying).
- * - 50% High / Moderate Chance Colleges in the middle (where you are highly competitive).
- * - 30% Safe Colleges at the bottom (guaranteed backups).
+ *
+ * CAP Rule: The system processes options top-to-bottom and FREEZES the student
+ * at the first allotment. So the correct strategy is:
+ *   1. Dream colleges first (hardest to get — you want to try these first)
+ *   2. Low Chance next (still aspirational — worth trying before safer ones)
+ *   3. Moderate Chance in the middle
+ *   4. High Chance after that
+ *   5. Safe backups at the bottom (guaranteed seats — listed last as fallback)
+ *
+ * Within each tier, sorted by cutoff descending (highest-prestige first).
  */
 export function generateCapStrategy(results: PredictionResult[]): PredictionResult[] {
-  // Sort colleges by cutoff percent descending (prestige order)
-  const sorted = [...results].sort((a, b) => b.cutoffPercent - a.cutoffPercent);
-  
-  const dream = sorted.filter(r => r.chanceStatus === 'Dream');
-  const highMod = sorted.filter(r => r.chanceStatus === 'High Chance' || r.chanceStatus === 'Moderate Chance');
-  const safe = sorted.filter(r => r.chanceStatus === 'Safe' || r.chanceStatus === 'Low Chance'); // Low chance treated as border backup here
-  
-  const strategyList: PredictionResult[] = [];
-  
-  // Take top 3 dream colleges
-  strategyList.push(...dream.slice(0, 3));
-  
-  // Take top 6 high/mod chance colleges
-  strategyList.push(...highMod.slice(0, 6));
-  
-  // Take top 4 safe colleges
-  strategyList.push(...safe.slice(0, 4));
-  
-  // If we don't have enough, fill in from what remains
-  if (strategyList.length < 10) {
-    const ids = new Set(strategyList.map(s => s.college.choiceCode));
-    for (const r of sorted) {
-      if (strategyList.length >= 12) break;
-      if (!ids.has(r.college.choiceCode)) {
-        strategyList.push(r);
-        ids.add(r.college.choiceCode);
+  // Within each bucket sort by cutoff desc (most prestigious first)
+  const byCutoff = (a: PredictionResult, b: PredictionResult) => b.cutoffPercent - a.cutoffPercent;
+
+  const dream    = [...results].filter(r => r.chanceStatus === 'Dream').sort(byCutoff);
+  const low      = [...results].filter(r => r.chanceStatus === 'Low Chance').sort(byCutoff);
+  const moderate = [...results].filter(r => r.chanceStatus === 'Moderate Chance').sort(byCutoff);
+  const high     = [...results].filter(r => r.chanceStatus === 'High Chance').sort(byCutoff);
+  const safe     = [...results].filter(r => r.chanceStatus === 'Safe').sort(byCutoff);
+
+  const strategyList: PredictionResult[] = [
+    ...dream.slice(0, 3),      // up to 3 dream colleges at the top
+    ...low.slice(0, 3),        // up to 3 low-chance (aspirational)
+    ...moderate.slice(0, 3),   // up to 3 moderate
+    ...high.slice(0, 3),       // up to 3 high chance
+    ...safe.slice(0, 3),       // up to 3 safe backups at the bottom
+  ];
+
+  // Deduplicate (shouldn't be needed but just in case)
+  const seen = new Set<string>();
+  const deduped = strategyList.filter(r => {
+    if (seen.has(r.college.choiceCode)) return false;
+    seen.add(r.college.choiceCode);
+    return true;
+  });
+
+  // If we have fewer than 10, fill remaining from all results (maintaining order: hardest → easiest)
+  if (deduped.length < 10) {
+    const allSorted = [
+      ...dream, ...low, ...moderate, ...high, ...safe
+    ];
+    for (const r of allSorted) {
+      if (deduped.length >= 15) break;
+      if (!seen.has(r.college.choiceCode)) {
+        deduped.push(r);
+        seen.add(r.college.choiceCode);
       }
     }
   }
-  
-  return strategyList;
+
+  return deduped;
 }
 
 /**

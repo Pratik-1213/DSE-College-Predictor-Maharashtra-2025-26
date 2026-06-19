@@ -1,11 +1,12 @@
 import React from 'react';
-import { ArrowRight, CheckCircle, Brain, BarChart2, ShieldAlert, Layers, Download, MapPin } from 'lucide-react';
+import { ArrowRight, CheckCircle, Brain, BarChart2, ShieldAlert, Layers, Download, MapPin, Search } from 'lucide-react';
 
 interface HeroSectionProps {
   onStartPredicting: () => void;
+  onSearchColleges?: () => void;
 }
 
-export default function HeroSection({ onStartPredicting }: HeroSectionProps) {
+export default function HeroSection({ onStartPredicting, onSearchColleges }: HeroSectionProps) {
   const stats = [
     { value: '682+', label: 'Engineering Colleges', desc: 'Across Maharashtra' },
     { value: '90+', label: 'Branches / Courses', desc: 'Direct Second Year' },
@@ -88,7 +89,7 @@ export default function HeroSection({ onStartPredicting }: HeroSectionProps) {
               ))}
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <button
                 onClick={onStartPredicting}
                 className="btn-primary group inline-flex items-center gap-3 text-sm sm:text-base px-7 py-4"
@@ -96,6 +97,15 @@ export default function HeroSection({ onStartPredicting }: HeroSectionProps) {
                 <span>Predict My Colleges</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-200" />
               </button>
+              {onSearchColleges && (
+                <button
+                  onClick={onSearchColleges}
+                  className="inline-flex items-center gap-2 px-5 py-4 rounded-[10px] border border-white/20 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold transition-all duration-150"
+                >
+                  <Search className="w-4 h-4" />
+                  <span>Search Colleges</span>
+                </button>
+              )}
             </div>
           </div>
           <div className="hidden lg:block lg:col-span-5 h-[320px]" />

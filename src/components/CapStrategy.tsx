@@ -20,9 +20,19 @@ function getMarker(status: string) {
     label: 'Dream', colorClass: 'text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/20',
     dot: 'bg-red-500'
   };
-  if (status === 'High Chance' || status === 'Moderate Chance') return {
+  if (status === 'Low Chance') return {
+    icon: <Award className="w-3.5 h-3.5 shrink-0" />,
+    label: 'Aspirational', colorClass: 'text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/20',
+    dot: 'bg-orange-500'
+  };
+  if (status === 'Moderate Chance') return {
     icon: <Target className="w-3.5 h-3.5 shrink-0" />,
-    label: 'Realistic', colorClass: 'text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20',
+    label: 'Realistic', colorClass: 'text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20',
+    dot: 'bg-amber-500'
+  };
+  if (status === 'High Chance') return {
+    icon: <Target className="w-3.5 h-3.5 shrink-0" />,
+    label: 'Good Chance', colorClass: 'text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20',
     dot: 'bg-blue-500'
   };
   return {
@@ -50,7 +60,7 @@ export default function CapStrategy({ strategyColleges }: CapStrategyProps) {
           Recommended CAP Option Form Order
         </h3>
         <p className="text-[12px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
-          Maharashtra CAP processes options <strong className="text-slate-700 dark:text-slate-300">top-to-bottom</strong>. Put dream colleges first for the best shot, realistic ones in the middle, and safe backups at the bottom.
+          Maharashtra CAP processes options <strong className="text-slate-700 dark:text-slate-300">top-to-bottom and freezes you at the first allotment</strong>. Dream &amp; Low Chance colleges go first (you want to try for the best seat before settling), Moderate in the middle, and Safe backups at the bottom.
         </p>
       </div>
 

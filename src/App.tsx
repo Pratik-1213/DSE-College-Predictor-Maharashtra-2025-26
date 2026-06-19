@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection';
 import PredictionForm from './components/PredictionForm';
 import LoadingScreen from './components/LoadingScreen';
 import ResultsDashboard from './components/ResultsDashboard';
+import CollegeSearch from './components/CollegeSearch';
 import { StudentProfile, PredictionResult } from './types';
 import { predictColleges } from './utils/predictionEngine';
 
@@ -15,7 +16,7 @@ import { CollegeRecord } from './types';
 const cutoffDataset = cutoffDataRaw as CollegeRecord[];
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'predict' | 'loading' | 'results'>('landing');
+  const [view, setView] = useState<'landing' | 'predict' | 'loading' | 'results' | 'search'>('landing');
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark') return true;
@@ -67,11 +68,9 @@ export default function App() {
   };
 
   // Handle direct navigation from header links
-  const handleNavigate = (targetView: 'landing' | 'predict' | 'results') => {
+  const handleNavigate = (targetView: 'landing' | 'predict' | 'results' | 'search') => {
     if (targetView === 'results' && predictionResults.length === 0) {
       setView('predict');
-    } else if (targetView === 'results') {
-      setView('results');
     } else {
       setView(targetView);
     }
@@ -80,17 +79,21 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Navigation Header */}
-      <Header 
-        darkMode={darkMode} 
-        setDarkMode={setDarkMode} 
+      <Header
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
         onNavigate={handleNavigate}
         activeView={view === 'loading' ? 'predict' : view}
+        hasResults={predictionResults.length > 0}
       />
 
       {/* Main Content Area */}
       <main className="flex-grow flex flex-col items-center">
         {view === 'landing' && (
-          <HeroSection onStartPredicting={() => setView('predict')} />
+          <HeroSection
+            onStartPredicting={() => setView('predict')}
+            onSearchColleges={() => setView('search')}
+          />
         )}
 
         {view === 'predict' && (
@@ -114,6 +117,15 @@ export default function App() {
               results={predictionResults}
               profile={studentProfile}
               onBack={() => setView('predict')}
+            />
+          </div>
+        )}
+
+        {view === 'search' && (
+          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen">
+            <CollegeSearch
+              dataset={cutoffDataset}
+              onBack={() => setView('landing')}
             />
           </div>
         )}

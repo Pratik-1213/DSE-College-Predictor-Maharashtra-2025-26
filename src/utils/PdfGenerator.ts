@@ -8,268 +8,325 @@ export function generatePdfReport(
   strategyColleges: PredictionResult[],
   comparisonColleges: PredictionResult[]
 ) {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  });
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
+  const pageWidth  = doc.internal.pageSize.getWidth();   // 210
+  const pageHeight = doc.internal.pageSize.getHeight();  // 297
+  const ml = 14;   // left margin
+  const mr = 14;   // right margin
+  const contentW = pageWidth - ml - mr;                  // 182
 
-  // Helpers
-  const addHeader = (title: string, y: number) => {
+  // ── helpers ─────────────────────────────────────────────────────────────────
+  const sectionHeader = (title: string, y: number) => {
     doc.setFont('Helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(37, 99, 235); // Blue primary
-    doc.text(title, margin, y);
+    doc.setFontSize(11);
+    doc.setTextColor(37, 99, 235);
+    doc.text(title, ml, y);
     doc.setDrawColor(37, 99, 235);
-    doc.setLineWidth(0.5);
-    doc.line(margin, y + 2, pageWidth - margin, y + 2);
+    doc.setLineWidth(0.4);
+    doc.line(ml, y + 1.5, pageWidth - mr, y + 1.5);
+    return y + 6;
   };
 
-  // --- Title & Header Banner ---
-  doc.setFillColor(37, 99, 235); // Blue
-  doc.rect(0, 0, pageWidth, 25, 'F');
-  
-  doc.setFillColor(124, 58, 237); // Purple accent
-  doc.rect(0, 25, pageWidth, 2, 'F');
+  const labelValue = (
+    label: string, value: string,
+    x: number, y: number,
+    labelWidth = 32
+  ) => {
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text(label, x, y);
+    doc.setFont('Helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    doc.text(value, x + labelWidth, y);
+  };
+
+  // wrap long text into multiple lines within a max width
+  const wrapText = (text: string, maxWidth: number, fontSize: number): string[] => {
+    doc.setFontSize(fontSize);
+    return doc.splitTextToSize(text, maxWidth) as string[];
+  };
+
+  // ── PAGE 1 ──────────────────────────────────────────────────────────────────
+
+  // Banner
+  doc.setFillColor(37, 99, 235);
+  doc.rect(0, 0, pageWidth, 22, 'F');
+  doc.setFillColor(124, 58, 237);
+  doc.rect(0, 22, pageWidth, 2, 'F');
 
   doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(18);
+  doc.setFontSize(15);
   doc.setTextColor(255, 255, 255);
-  doc.text('DSE COLLEGE PREDICTOR MAHARASHTRA 2025-26', margin, 15);
-  doc.setFontSize(10);
-  doc.text('Direct Second Year Engineering Admission Report', margin, 21);
+  doc.text('DSE COLLEGE PREDICTOR MAHARASHTRA 2025-26', ml, 12);
+  doc.setFontSize(9);
+  doc.setFont('Helvetica', 'normal');
+  doc.text('Direct Second Year Engineering — Personalised Admission Report', ml, 18.5);
 
-  // --- Candidate Profile Card ---
-  let currentY = 37;
+  // ── Candidate Info Card ───────────────────────────────────────────────────
+  let y = 32;
   doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   doc.setTextColor(15, 23, 42);
-  doc.text('CANDIDATE INFORMATION', margin, currentY);
-  
+  doc.text('CANDIDATE INFORMATION', ml, y);
+
+  y += 3;
   doc.setDrawColor(226, 232, 240);
   doc.setFillColor(248, 250, 252);
-  doc.rect(margin, currentY + 3, pageWidth - (margin * 2), 24, 'FD');
+  doc.rect(ml, y, contentW, 26, 'FD');
 
+  const col2X = ml + contentW / 2 + 4;
+
+  y += 7;
+  labelValue('Student Name:',     profile.name,      ml + 4, y);
+  labelValue('Gender:',           profile.gender,    col2X,  y);
+
+  y += 6;
+  labelValue('Diploma Score:',    `${profile.percentage}%`,             ml + 4, y);
+  labelValue('Contact No:',       profile.mobile || 'Not Provided',     col2X,  y);
+
+  y += 6;
+  labelValue('Category:',         profile.category,  ml + 4, y);
+  labelValue('Report Date:',      new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }), col2X, y);
+
+  // ── Preferences ──────────────────────────────────────────────────────────
+  y += 10;
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('Student Name:', margin + 5, currentY + 10);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(profile.name, margin + 35, currentY + 10);
+  doc.setTextColor(15, 23, 42);
+  doc.text('Preferences Selected:', ml, y);
 
-  doc.setFont('Helvetica', 'bold');
-  doc.text('Diploma Score:', margin + 5, currentY + 16);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(`${profile.percentage}%`, margin + 35, currentY + 16);
+  y += 5;
 
-  doc.setFont('Helvetica', 'bold');
-  doc.text('Category Selected:', margin + 5, currentY + 22);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(profile.category, margin + 35, currentY + 22);
-
-  doc.setFont('Helvetica', 'bold');
-  doc.text('Gender:', margin + 110, currentY + 10);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(profile.gender, margin + 130, currentY + 10);
-
-  doc.setFont('Helvetica', 'bold');
-  doc.text('Contact No:', margin + 110, currentY + 16);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(profile.mobile || 'Not Provided', margin + 130, currentY + 16);
-
-  doc.setFont('Helvetica', 'bold');
-  doc.text('Report Date:', margin + 110, currentY + 22);
-  doc.setFont('Helvetica', 'normal');
-  doc.text(new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }), margin + 130, currentY + 22);
-
-  // --- Preferences Info ---
-  currentY += 34;
-  doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.text('Preferences Selected:', margin, currentY);
-  doc.setFont('Helvetica', 'normal');
-  doc.setFontSize(9);
+  // Regions line
   const regionsStr = profile.regions.join(', ');
-  doc.text(`Regions: ${regionsStr.length > 80 ? regionsStr.substring(0, 80) + '...' : regionsStr}`, margin + 35, currentY);
-  
-  const branchesJoined = profile.branches.length > 4 ? `${profile.branches.slice(0, 4).join(', ')} ...` : profile.branches.join(', ');
-  doc.text(`Branches: ${branchesJoined}`, margin + 35, currentY + 5);
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(71, 85, 105);
+  doc.text('Regions:', ml + 2, y);
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor(15, 23, 42);
+  const regLines = wrapText(regionsStr, contentW - 22, 8.5);
+  doc.text(regLines, ml + 22, y);
+  y += regLines.length * 4.5;
 
-  // --- Table 1: Top 10 College Recommendations ---
-  currentY += 12;
-  addHeader('TOP 10 RECOMMENDED COLLEGES', currentY);
-  
-  const topCollegesRows = topColleges.slice(0, 10).map((r, index) => [
-    index + 1,
-    r.college.collegeName,
-    r.college.branch,
-    `${r.cutoffPercent}% (${r.matchedCutoffCategory})`,
-    `${r.probability}%`,
-    r.chanceStatus
-  ]);
+  // Branches line
+  y += 1;
+  const branchStr = profile.branches.slice(0, 6).join(', ') + (profile.branches.length > 6 ? ` +${profile.branches.length - 6} more` : '');
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(71, 85, 105);
+  doc.text('Branches:', ml + 2, y);
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor(15, 23, 42);
+  const branchLines = wrapText(branchStr, contentW - 22, 8.5);
+  doc.text(branchLines, ml + 22, y);
+  y += branchLines.length * 4.5 + 6;
 
+  // ── Top 10 Table ─────────────────────────────────────────────────────────
+  y = sectionHeader('TOP 10 RECOMMENDED COLLEGES', y);
+
+  // Column widths must sum to contentW (182)
+  // #(7) + College(68) + Branch(52) + Cutoff(22) + Prob(15) + Status(18) = 182
   autoTable(doc, {
-    startY: currentY + 4,
-    head: [['#', 'College Name', 'Branch / Course Name', 'Cutoff (Seat)', 'Probability', 'Admission Chance']],
-    body: topCollegesRows,
+    startY: y,
+    head: [['#', 'College Name', 'Branch / Course', 'Cutoff', 'Prob.', 'Status']],
+    body: topColleges.slice(0, 10).map((r, i) => [
+      i + 1,
+      r.college.collegeName,
+      r.college.branch,
+      `${r.cutoffPercent}%\n(${r.matchedCutoffCategory})`,
+      `${r.probability}%`,
+      r.chanceStatus
+    ]),
     theme: 'grid',
-    headStyles: { fillColor: [37, 99, 235], fontSize: 8, fontStyle: 'bold' },
-    bodyStyles: { fontSize: 7.5, textColor: [15, 23, 42] },
-    columnStyles: {
-      0: { cellWidth: 8 },
-      1: { cellWidth: 70 },
-      2: { cellWidth: 50 },
-      3: { cellWidth: 25 },
-      4: { cellWidth: 17 },
-      5: { cellWidth: 20 }
+    margin: { left: ml, right: mr },
+    headStyles: {
+      fillColor: [37, 99, 235],
+      fontSize: 8,
+      fontStyle: 'bold',
+      halign: 'center',
+      valign: 'middle'
     },
-    didParseCell: function(data: any) {
+    bodyStyles: { fontSize: 7.5, textColor: [15, 23, 42], valign: 'middle' },
+    columnStyles: {
+      0: { cellWidth: 7,  halign: 'center' },
+      1: { cellWidth: 68 },
+      2: { cellWidth: 52 },
+      3: { cellWidth: 22, halign: 'center' },
+      4: { cellWidth: 15, halign: 'center' },
+      5: { cellWidth: 18, halign: 'center' }
+    },
+    didParseCell(data: any) {
       if (data.section === 'body' && data.column.index === 5) {
-        const text = data.cell.text[0];
-        if (text === 'Safe') {
-          data.cell.styles.textColor = [22, 101, 52]; // Dark green
+        const t = data.cell.text[0];
+        const colors: Record<string, [number,number,number]> = {
+          'Safe':            [22, 101, 52],
+          'High Chance':     [30,  58, 138],
+          'Moderate Chance': [113,  63,  18],
+          'Low Chance':      [194,  65,  12],
+          'Dream':           [153,  27,  27],
+        };
+        if (colors[t]) {
+          data.cell.styles.textColor = colors[t];
           data.cell.styles.fontStyle = 'bold';
-        } else if (text === 'High Chance') {
-          data.cell.styles.textColor = [30, 58, 138]; // Dark blue
-          data.cell.styles.fontStyle = 'bold';
-        } else if (text === 'Moderate Chance') {
-          data.cell.styles.textColor = [113, 63, 18]; // Dark yellow
-          data.cell.styles.fontStyle = 'bold';
-        } else if (text === 'Low Chance') {
-          data.cell.styles.textColor = [194, 65, 12]; // Dark orange
-        } else if (text === 'Dream') {
-          data.cell.styles.textColor = [153, 27, 27]; // Dark red
         }
       }
     }
   });
 
-  // --- Add Page 2 for CAP Form Order & Comparison ---
+  // ── PAGE 2 ──────────────────────────────────────────────────────────────────
   doc.addPage();
-  currentY = 20;
 
-  // Banner at top of page 2
+  // Small header bar
   doc.setFillColor(37, 99, 235);
-  doc.rect(0, 0, pageWidth, 12, 'F');
-  doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(255, 255, 255);
-  doc.text('DSE Admissions Maharashtra - Option Form strategy', margin, 8);
-
-  addHeader('RECOMMENDED CAP OPTION FORM ORDER', currentY);
-  
-  doc.setFont('Helvetica', 'normal');
-  doc.setFontSize(8.5);
-  doc.setTextColor(71, 85, 105);
-  doc.text('This order is strategically structured: Dream choices at top, Moderate in middle, and Safe backups at bottom.', margin, currentY + 5);
-
-  const strategyRows = strategyColleges.map((r, index) => [
-    index + 1,
-    r.college.choiceCode,
-    r.college.collegeName,
-    r.college.branch,
-    r.college.type,
-    `${r.cutoffPercent}%`,
-    r.chanceStatus
-  ]);
-
-  autoTable(doc, {
-    startY: currentY + 8,
-    head: [['Order', 'Choice Code', 'College Name', 'Branch', 'Type', 'Cutoff', 'Status']],
-    body: strategyRows,
-    theme: 'striped',
-    headStyles: { fillColor: [124, 58, 237], fontSize: 8, fontStyle: 'bold' },
-    bodyStyles: { fontSize: 7.5, textColor: [15, 23, 42] },
-    columnStyles: {
-      0: { cellWidth: 12 },
-      1: { cellWidth: 22 },
-      2: { cellWidth: 65 },
-      3: { cellWidth: 40 },
-      4: { cellWidth: 20 },
-      5: { cellWidth: 16 },
-      6: { cellWidth: 15 }
-    }
-  });
-
-  let lastTableY = (doc as any).lastAutoTable.finalY;
-
-  // --- Comparison Table (If colleges selected) ---
-  if (comparisonColleges && comparisonColleges.length > 0) {
-    currentY = lastTableY + 12;
-    if (currentY + 50 > pageHeight - margin) {
-      doc.addPage();
-      currentY = 20;
-    }
-    
-    addHeader('COLLEGE COMPARISON', currentY);
-
-    const compRows = comparisonColleges.map(r => [
-      r.college.collegeName,
-      r.college.branch,
-      `${r.cutoffPercent}%`,
-      r.college.type,
-      r.college.location,
-      `${r.probability}%`
-    ]);
-
-    autoTable(doc, {
-      startY: currentY + 4,
-      head: [['College', 'Branch', 'Previous Cutoff', 'Type', 'Location', 'My Probability']],
-      body: compRows,
-      theme: 'grid',
-      headStyles: { fillColor: [15, 23, 42], fontSize: 8, fontStyle: 'bold' },
-      bodyStyles: { fontSize: 7.5 },
-      columnStyles: {
-        0: { cellWidth: 65 },
-        1: { cellWidth: 45 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 25 },
-        4: { cellWidth: 20 },
-        5: { cellWidth: 20 }
-      }
-    });
-    
-    lastTableY = (doc as any).lastAutoTable.finalY;
-  }
-
-  // --- Strategic CAP Advice text box ---
-  currentY = lastTableY + 10;
-  if (currentY + 30 > pageHeight - margin) {
-    doc.addPage();
-    currentY = 20;
-  }
-
-  doc.setDrawColor(253, 186, 116);
-  doc.setFillColor(255, 247, 237);
-  doc.rect(margin, currentY, pageWidth - (margin * 2), 22, 'FD');
-
+  doc.rect(0, 0, pageWidth, 10, 'F');
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
-  doc.setTextColor(194, 65, 12); // Orange warning text
-  doc.text('CAP Option Form Strategy Tips:', margin + 5, currentY + 5);
+  doc.setTextColor(255, 255, 255);
+  doc.text('DSE Admissions Maharashtra 2025-26 — CAP Option Form Strategy', ml, 7);
+
+  y = 18;
+
+  // ── CAP Strategy Table ────────────────────────────────────────────────────
+  y = sectionHeader('RECOMMENDED CAP OPTION FORM ORDER', y);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(8);
-  doc.setTextColor(113, 63, 18);
-  doc.text('1. Add at least 15-20 college choices in your CAP form to avoid getting unallotted in CAP Round I.', margin + 5, currentY + 10);
-  doc.text('2. Keep AI & DS, Cyber Security, or IT branches along with CSE/Computer Engineering to double your allotment chances.', margin + 5, currentY + 14);
-  doc.text('3. Put the most ambitious dream colleges at the top, followed by realistic targets, and safe backup colleges at the bottom.', margin + 5, currentY + 18);
+  doc.setTextColor(71, 85, 105);
+  doc.text('Dream choices at top · Realistic targets in middle · Safe backups at bottom', ml, y);
+  y += 5;
 
-  // --- Footer Disclaimer (Draw at the bottom of the current page) ---
-  const footerY = pageHeight - 15;
-  doc.setDrawColor(226, 232, 240);
-  doc.setLineWidth(0.3);
-  doc.line(margin, footerY - 2, pageWidth - margin, footerY - 2);
+  // Order(10) + Code(22) + College(60) + Branch(45) + Type(18) + Cutoff(15) + Status(12) = 182
+  autoTable(doc, {
+    startY: y,
+    head: [['#', 'Choice Code', 'College Name', 'Branch', 'Type', 'Cutoff', 'Status']],
+    body: strategyColleges.map((r, i) => [
+      i + 1,
+      r.college.choiceCode,
+      r.college.collegeName,
+      r.college.branch,
+      r.college.type,
+      `${r.cutoffPercent}%`,
+      r.chanceStatus
+    ]),
+    theme: 'striped',
+    margin: { left: ml, right: mr },
+    headStyles: {
+      fillColor: [124, 58, 237],
+      fontSize: 7.5,
+      fontStyle: 'bold',
+      halign: 'center',
+      valign: 'middle'
+    },
+    bodyStyles: { fontSize: 7, textColor: [15, 23, 42], valign: 'middle' },
+    columnStyles: {
+      0: { cellWidth: 10, halign: 'center' },
+      1: { cellWidth: 22, halign: 'center' },
+      2: { cellWidth: 60 },
+      3: { cellWidth: 45 },
+      4: { cellWidth: 18 },
+      5: { cellWidth: 15, halign: 'center' },
+      6: { cellWidth: 12, halign: 'center' }
+    },
+    didParseCell(data: any) {
+      if (data.section === 'body' && data.column.index === 6) {
+        const t = data.cell.text[0];
+        const colors: Record<string, [number,number,number]> = {
+          'Safe':            [22, 101, 52],
+          'High Chance':     [30,  58, 138],
+          'Moderate Chance': [113,  63,  18],
+          'Low Chance':      [194,  65,  12],
+          'Dream':           [153,  27,  27],
+        };
+        if (colors[t]) {
+          data.cell.styles.textColor = colors[t];
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    }
+  });
 
-  doc.setFont('Helvetica', 'italic');
+  let lastY: number = (doc as any).lastAutoTable.finalY;
+
+  // ── Comparison Table ──────────────────────────────────────────────────────
+  if (comparisonColleges?.length > 0) {
+    let cy = lastY + 10;
+    if (cy + 50 > pageHeight - 20) { doc.addPage(); cy = 20; }
+
+    cy = sectionHeader('COLLEGE COMPARISON MATRIX', cy);
+
+    // College(62) + Branch(50) + Cutoff(20) + Type(22) + Region(16) + Prob(12) = 182
+    autoTable(doc, {
+      startY: cy,
+      head: [['College Name', 'Branch', 'Prev. Cutoff', 'Type', 'Region', 'My Prob.']],
+      body: comparisonColleges.map(r => [
+        r.college.collegeName,
+        r.college.branch,
+        `${r.cutoffPercent}% (${r.matchedCutoffCategory})`,
+        r.college.type,
+        r.college.region,
+        `${r.probability}%`
+      ]),
+      theme: 'grid',
+      margin: { left: ml, right: mr },
+      headStyles: { fillColor: [15, 23, 42], fontSize: 7.5, fontStyle: 'bold', halign: 'center' },
+      bodyStyles: { fontSize: 7, textColor: [15, 23, 42] },
+      columnStyles: {
+        0: { cellWidth: 62 },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 22 },
+        4: { cellWidth: 16, halign: 'center' },
+        5: { cellWidth: 12, halign: 'center' }
+      }
+    });
+
+    lastY = (doc as any).lastAutoTable.finalY;
+  }
+
+  // ── Tips Box ──────────────────────────────────────────────────────────────
+  let ty = lastY + 8;
+  if (ty + 28 > pageHeight - 18) { doc.addPage(); ty = 20; }
+
+  doc.setDrawColor(253, 186, 116);
+  doc.setFillColor(255, 247, 237);
+  doc.rect(ml, ty, contentW, 26, 'FD');
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(194, 65, 12);
+  doc.text('CAP Option Form Strategy Tips:', ml + 4, ty + 6);
+
+  doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7.5);
-  doc.setTextColor(148, 163, 184);
-  doc.text('This report is generated using previous CAP cutoff analysis and does not guarantee admission. actual cutoffs can vary based on student registrations.', margin, footerY + 2);
-  doc.text(`Page ${doc.internal.pages.length - 1} of ${doc.internal.pages.length - 1}`, pageWidth - margin - 20, footerY + 2);
+  doc.setTextColor(113, 63, 18);
+  const tips = [
+    '1. Add at least 15-20 college choices in your CAP form to avoid being unallotted in Round I.',
+    '2. Include AI & DS, Cyber Security or IT alongside CSE/Computer Engg. to maximise allotment chances.',
+    '3. Dream colleges at the top, realistic targets in the middle, safe backups at the bottom.'
+  ];
+  tips.forEach((tip, i) => doc.text(tip, ml + 4, ty + 12 + i * 5));
 
-  // Save report PDF
-  doc.save(`DSE_College_Prediction_Report_${profile.name.replace(/\s+/g, '_')}.pdf`);
+  // ── Footer on every page ──────────────────────────────────────────────────
+  const totalPages: number = (doc.internal as any).pages.length - 1;
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    const fy = pageHeight - 8;
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.3);
+    doc.line(ml, fy - 2, pageWidth - mr, fy - 2);
+    doc.setFont('Helvetica', 'italic');
+    doc.setFontSize(6.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text(
+      'Advisory only — actual 2025-26 cutoffs may vary. Verify all choices with the official CET Cell handbook.',
+      ml, fy + 1
+    );
+    doc.setFont('Helvetica', 'normal');
+    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr - 18, fy + 1);
+  }
+
+  doc.save(`DSE_Report_${profile.name.replace(/\s+/g, '_')}.pdf`);
 }

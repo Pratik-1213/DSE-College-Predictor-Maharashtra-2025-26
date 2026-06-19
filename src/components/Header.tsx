@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, GraduationCap, Menu, X } from 'lucide-react';
+import { Sun, Moon, GraduationCap, Menu, X, Search } from 'lucide-react';
 
 interface HeaderProps {
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
-  onNavigate: (view: 'landing' | 'predict' | 'results') => void;
+  onNavigate: (view: 'landing' | 'predict' | 'results' | 'search') => void;
   activeView: string;
+  hasResults?: boolean;
 }
 
-export default function Header({ darkMode, setDarkMode, onNavigate, activeView }: HeaderProps) {
+export default function Header({ darkMode, setDarkMode, onNavigate, activeView, hasResults }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -22,8 +23,9 @@ export default function Header({ darkMode, setDarkMode, onNavigate, activeView }
   useEffect(() => { setMobileMenuOpen(false); }, [activeView]);
 
   const navItems = [
-    { label: 'Home', view: 'landing' as const },
-    { label: 'Predict', view: 'predict' as const },
+    { label: 'Home',          view: 'landing' as const },
+    { label: 'Predict',       view: 'predict' as const },
+    { label: 'College Search',view: 'search'  as const },
   ];
 
   return (
@@ -58,7 +60,8 @@ export default function Header({ darkMode, setDarkMode, onNavigate, activeView }
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1 font-sans font-semibold text-[13px]">
             {navItems.map(item => {
-              const isActive = activeView === item.view || (item.view === 'predict' && activeView === 'results');
+              const isActive = activeView === item.view
+                || (item.view === 'predict' && activeView === 'results');
               return (
                 <button
                   key={item.view}
@@ -118,7 +121,8 @@ export default function Header({ darkMode, setDarkMode, onNavigate, activeView }
       >
         <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-lg px-4 pt-2 pb-4 flex flex-col gap-1">
           {navItems.map(item => {
-            const isActive = activeView === item.view || (item.view === 'predict' && activeView === 'results');
+            const isActive = activeView === item.view
+              || (item.view === 'predict' && activeView === 'results');
             return (
               <button
                 key={item.view}
@@ -133,6 +137,18 @@ export default function Header({ darkMode, setDarkMode, onNavigate, activeView }
               </button>
             );
           })}
+          {hasResults && (
+            <button
+              onClick={() => { onNavigate('results'); setMobileMenuOpen(false); }}
+              className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 cursor-pointer ${
+                activeView === 'results'
+                  ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-400 font-bold'
+                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              My Results
+            </button>
+          )}
           <div className="border-t border-slate-100 dark:border-slate-800 mt-2 pt-3">
             <button
               onClick={() => { onNavigate('predict'); setMobileMenuOpen(false); }}
