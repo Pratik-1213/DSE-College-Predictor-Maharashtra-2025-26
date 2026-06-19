@@ -333,7 +333,7 @@ export function generatePdfReport(
     doc.setFontSize(6);
     doc.setTextColor(148, 163, 184);
     doc.text(
-      'Developed by Pratik Sachin Kumbhar  |  kumbharpratik1312@gmail.com',
+      'Developed by Pratik Sachin Kumbhar  |  kumbharpratik1312@gmail.com  |  pratik.1213.coep@gmail.com',
       pageWidth / 2, fy + 1,
       { align: 'center' }
     );
