@@ -17,16 +17,17 @@ const cutoffDataset = cutoffDataRaw as CollegeRecord[];
 export default function App() {
   const [view, setView] = useState<'landing' | 'predict' | 'loading' | 'results'>('landing');
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    // Check localStorage or system preferences
     const saved = localStorage.getItem('theme');
-    if (saved) return saved === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark') return true;
+    if (saved === 'light') return false;
+    // No saved preference — default to LIGHT mode
+    return false;
   });
 
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [predictionResults, setPredictionResults] = useState<PredictionResult[]>([]);
 
-  // Synchronize theme class with DOM
+  // Synchronize dark class on <html> and persist preference
   useEffect(() => {
     const root = document.documentElement;
     if (darkMode) {
@@ -37,6 +38,14 @@ export default function App() {
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
+
+  // One-time: if no theme was ever saved, ensure light is written so
+  // the inline script in index.html finds 'light' on next load.
+  useEffect(() => {
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'light');
+    }
+  }, []);
 
   // Handle form submission
   const handleFormSubmit = (profile: StudentProfile) => {

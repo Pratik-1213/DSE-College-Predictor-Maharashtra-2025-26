@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DSE College Predictor Maharashtra 2025-26 | Direct Second Year Engineering</title>
     <meta name="description" content="Predict the best engineering colleges and branch options you can get for Direct Second Year Admissions (DSE) in Maharashtra based on previous CAP cutoff marks. Generate strategic option forms and downloadable PDF reports." />
+    <!-- Sync dark class before first paint to prevent flash -->
+    <script>
+      (function() {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (saved === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
