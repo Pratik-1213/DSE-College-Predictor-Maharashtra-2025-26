@@ -288,10 +288,53 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
                 </div>
               </button>
 
-              {/* Expanded: branch-wise cutoff table */}
+              {/* Expanded: cutoff data */}
               {open && (
                 <div className="border-t border-slate-100">
-                  <div className="overflow-x-auto">
+
+                  {/* ── Mobile: one card per branch ── */}
+                  <div className="sm:hidden divide-y divide-slate-100">
+                    {g.branches.map((branch, i) => {
+                      const branchCats = availableCats.filter(cat => {
+                        const e = branch.cutoffs[cat];
+                        return e && e.percentile !== null;
+                      });
+                      return (
+                        <div key={i} className="px-4 py-3 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="font-bold text-[12px] text-slate-900 leading-snug">{branch.branch}</span>
+                            <span className="font-mono text-[10px] text-slate-400 shrink-0 mt-0.5">{branch.choiceCode}</span>
+                          </div>
+                          {branchCats.length === 0 ? (
+                            <p className="text-[11px] text-slate-400 italic">No cutoff data available</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {branchCats.map(cat => {
+                                const entry = branch.cutoffs[cat];
+                                const pct   = entry?.percentile ?? null;
+                                const rank  = entry?.rank ?? null;
+                                const isLady = cat.startsWith('L');
+                                return (
+                                  <div key={cat} className={`flex flex-col items-center px-2.5 py-1.5 rounded-lg border text-center min-w-[64px] ${isLady ? 'bg-pink-50 border-pink-200' : 'bg-slate-50 border-slate-200'}`}>
+                                    <span className={`text-[9px] font-bold uppercase tracking-wide mb-0.5 ${isLady ? 'text-pink-500' : 'text-slate-400'}`}>
+                                      {CAT_LABELS[cat] ?? cat}
+                                    </span>
+                                    <span className="font-extrabold text-[13px] text-slate-900">{pct}%</span>
+                                    {rank !== null && (
+                                      <span className="text-[9px] text-slate-400 mt-0.5">Rank {rank.toLocaleString('en-IN')}</span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* ── Desktop: full scrollable table ── */}
+                  <div className="hidden sm:block overflow-x-auto">
                     <table className="w-full text-[11px]">
                       <thead>
                         <tr className="bg-slate-50">
@@ -302,7 +345,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
                             Code
                           </th>
                           {availableCats.map(cat => (
-                            <th key={cat} className="text-center px-3 py-2.5 font-bold text-slate-500 uppercase tracking-wider text-[10px] whitespace-nowrap">
+                            <th key={cat} className={`text-center px-3 py-2.5 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap ${cat.startsWith('L') ? 'text-pink-400' : 'text-slate-500'}`}>
                               {CAT_LABELS[cat] ?? cat}
                             </th>
                           ))}
@@ -341,6 +384,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
                       </tbody>
                     </table>
                   </div>
+
                 </div>
               )}
             </div>
