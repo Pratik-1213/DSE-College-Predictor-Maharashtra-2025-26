@@ -1,10 +1,15 @@
+export interface CutoffEntry {
+  rank: number | null;
+  percentile: number | null;
+}
+
 export interface CollegeRecord {
   collegeName: string;
   code: string;
   region: string;
   type: string; // "Government", "Government Autonomous", "Aided", "Autonomous", "Private"
   branch: string;
-  cutoffs: Record<string, number>;
+  cutoffs: Record<string, CutoffEntry>;
   autonomous: boolean;
   location: string;
   choiceCode: string;

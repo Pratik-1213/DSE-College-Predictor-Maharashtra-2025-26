@@ -1,25 +1,35 @@
-import { CollegeRecord, StudentProfile, PredictionResult, DashboardStats } from '../types';
+import { CollegeRecord, CutoffEntry, StudentProfile, PredictionResult, DashboardStats } from '../types';
 
 /**
- * Gets the applicable cutoff value and key from the college's cutoffs map
+ * Extracts the percentile value from a CutoffEntry, returning null if missing or null.
+ */
+function getPercentile(entry: CutoffEntry | undefined): number | null {
+  if (!entry || entry.percentile === null || entry.percentile === undefined) return null;
+  return entry.percentile;
+}
+
+/**
+ * Gets the applicable cutoff percentile and key from the college's cutoffs map
  * based on the student's category, gender, and merit fallback rules.
  */
 export function getStudentCutoffForCourse(
-  cutoffs: Record<string, number>,
+  cutoffs: Record<string, CutoffEntry>,
   category: string,
   gender: 'Male' | 'Female' | 'Other'
 ): { matchedKey: string; cutoffValue: number } | null {
-  const keysToCheck: string[] = [];
+  // Build category suffix — handles NT-A → NTA, SEBC stays SEBC, OPEN stays OPEN
   const suffix = category === 'OPEN' ? 'OPEN' : category.replace('-', '');
+
+  const keysToCheck: string[] = [];
 
   if (category === 'TFWS') {
     keysToCheck.push('TFWS');
   } else if (category === 'EWS') {
     keysToCheck.push('EWS');
   } else {
-    const gKey = 'G' + suffix; // e.g. GOBC, GSC, GOPEN
-    const lKey = 'L' + suffix; // e.g. LOBC, LSC, LOPEN
-    
+    const gKey = 'G' + suffix; // e.g. GOBC, GSC, GOPEN, GSEBC
+    const lKey = 'L' + suffix; // e.g. LOBC, LSC, LOPEN, LSEBC
+
     if (gender === 'Female') {
       keysToCheck.push(lKey, gKey);
     } else {
@@ -27,33 +37,33 @@ export function getStudentCutoffForCourse(
     }
   }
 
-  // Fallback: in Maharashtra admissions, category students can always secure open seats
+  // Fallback: Maharashtra DSE rules allow category candidates to fill open seats
   if (gender === 'Female') {
     keysToCheck.push('LOPEN', 'GOPEN');
   } else {
     keysToCheck.push('GOPEN');
   }
 
-  // Look for the best (lowest) available cutoff from the list of eligible keys
-  // Category specific keys are checked first, then open fallbacks.
+  // Level 1: Check category-specific keys (find the lowest/most-accessible cutoff)
   let bestKey = '';
   let minCutoff = Infinity;
 
-  // Level 1: Check category specific keys
-  const categoryKeys = keysToCheck.filter(k => k.endsWith(suffix) || k === category);
+  const categoryKeys = keysToCheck.filter(k => !k.endsWith('OPEN'));
   for (const key of categoryKeys) {
-    if (cutoffs[key] !== undefined && cutoffs[key] < minCutoff) {
-      minCutoff = cutoffs[key];
+    const val = getPercentile(cutoffs[key]);
+    if (val !== null && val < minCutoff) {
+      minCutoff = val;
       bestKey = key;
     }
   }
 
-  // Level 2: Check open fallbacks if category seats aren't listed
+  // Level 2: Fallback to open seats if no category-specific cutoff found
   if (minCutoff === Infinity) {
     const openKeys = keysToCheck.filter(k => k.endsWith('OPEN'));
     for (const key of openKeys) {
-      if (cutoffs[key] !== undefined && cutoffs[key] < minCutoff) {
-        minCutoff = cutoffs[key];
+      const val = getPercentile(cutoffs[key]);
+      if (val !== null && val < minCutoff) {
+        minCutoff = val;
         bestKey = key;
       }
     }
@@ -87,11 +97,13 @@ export function predictColleges(
     if (profile.collegeTypes.length > 0 && !profile.collegeTypes.includes('All Colleges')) {
       let typeMatch = false;
       for (const t of profile.collegeTypes) {
-        if (t === 'Government Only' && (record.type === 'Government' || record.type === 'Government Autonomous')) {
+        if (t === 'Government Only' && (record.type === 'Government' || record.type === 'Government Autonomous' || record.type === 'University Department')) {
           typeMatch = true;
         } else if (t === 'Autonomous Preferred' && record.autonomous) {
           typeMatch = true;
-        } else if (t === 'Private Included' && record.type === 'Private') {
+        } else if (t === 'Private Included' && (record.type === 'Un-Aided' || record.type === 'Private')) {
+          typeMatch = true;
+        } else if (t === 'Aided Only' && record.type === 'Aided') {
           typeMatch = true;
         } else if (t === record.type) {
           typeMatch = true;
@@ -119,9 +131,13 @@ export function predictColleges(
           recordBranchLower.includes('ai-') ||
           recordBranchLower.includes('cyber') ||
           recordBranchLower.includes('data science') ||
+          recordBranchLower.includes('data engineering') ||
           recordBranchLower.includes('iot') ||
           recordBranchLower.includes('internet of') ||
+          recordBranchLower.includes('industrial iot') ||
           recordBranchLower.includes('software') ||
+          recordBranchLower.includes('robotics and artificial') ||
+          recordBranchLower.includes('5g') ||
           recordBranchLower.includes('systems')
         ) {
           branchMatched = true;
@@ -134,7 +150,11 @@ export function predictColleges(
           recordBranchLower.includes('communication') ||
           recordBranchLower.includes('extc') ||
           recordBranchLower.includes('electrical') ||
-          recordBranchLower.includes('power')
+          recordBranchLower.includes('power') ||
+          recordBranchLower.includes('instrumentation') ||
+          recordBranchLower.includes('vlsi') ||
+          recordBranchLower.includes('automation and robotics') ||
+          recordBranchLower.includes('robotics and automation')
         ) {
           branchMatched = true;
         }
@@ -145,7 +165,9 @@ export function predictColleges(
           recordBranchLower.includes('production') ||
           recordBranchLower.includes('manufacturing') ||
           recordBranchLower.includes('automobile') ||
-          recordBranchLower.includes('mechatronics')
+          recordBranchLower.includes('mechatronics') ||
+          recordBranchLower.includes('additive manufacturing') ||
+          recordBranchLower.includes('manufacturing science')
         ) {
           branchMatched = true;
         }
@@ -226,7 +248,7 @@ export function getDashboardStats(results: PredictionResult[]): DashboardStats {
     };
   }
 
-  const govtCount = results.filter(r => r.college.type.includes('Government')).length;
+  const govtCount = results.filter(r => r.college.type.includes('Government') || r.college.type === 'University Department').length;
   const autoCount = results.filter(r => r.college.autonomous).length;
   const highestProb = Math.max(...results.map(r => r.probability));
   
@@ -297,33 +319,64 @@ export function getBranchesFromGroups(groups: string[]): string[] {
   const branchMap: Record<string, string[]> = {
     'Computer Group': [
       'Computer Engineering',
+      'Computer Engineering (Software Engineering)',
+      'Computer Science',
       'Computer Science and Engineering',
+      'Computer Science and Engineering (Artificial Intelligence and Data Science)',
+      'Computer Science and Engineering (Artificial Intelligence)',
+      'Computer Science and Engineering (Cyber Security)',
+      'Computer Science and Engineering (Internet of Things and Cyber Security Including Block Chain Technology)',
+      'Computer Science and Engineering (IoT)',
+      'Computer Science and Engineering(Artificial Intelligence and Machine Learning)',
+      'Computer Science and Engineering(Cyber Security)',
+      'Computer Science and Engineering(Data Science)',
+      'Computer Science and Information Technology',
+      'Computer Science and Technology',
+      'Computer Science and Business Systems',
+      'Computer Science and Design',
+      'Computer Technology',
       'Information Technology',
+      'Artificial Intelligence',
       'Artificial Intelligence (AI) and Data Science',
       'Artificial Intelligence and Data Science',
       'Artificial Intelligence and Machine Learning',
-      'Computer Science and Engineering(Artificial Intelligence and Machine Learning)',
-      'Computer Science and Engineering (Artificial Intelligence and Machine Learning)',
-      'Computer Science and Engineering (Cyber Security)',
-      'Computer Science and Technology',
-      'Computer Science and Business Systems',
-      'Computer Technology',
       'Cyber Security',
-      'Data Science'
+      'Data Science',
+      'Data Engineering',
+      'Internet of Things (IoT)',
+      'Industrial IoT',
+      'Robotics and Artificial Intelligence',
+      '5G'
     ],
     'Electronics Group': [
       'Electronics Engineering',
+      'Electronics Engineering ( VLSI Design and Technology)',
       'Electronics and Telecommunication Engg',
-      'Electronics and Telecommunication Engineering',
       'Electronics and Communication Engineering',
+      'Electronics and Communication (Advanced Communication Technology)',
+      'Electronics and Communication(Advanced Communication Technology)',
       'Electronics and Computer Engineering',
+      'Electronics and Computer Science',
+      'Electronics and BiomedicalÂ Engineering',
+      'Electrical Engineering',
       'Electrical Engg[Electronics and Power]',
-      'Electrical Engineering'
+      'Electrical and Computer Engineering',
+      'Electrical and Electronics Engineering',
+      'Electrical, Electronics and Power',
+      'Instrumentation Engineering',
+      'Instrumentation and Control Engineering',
+      'Automation and Robotics',
+      'Robotics and Automation'
     ],
     'Mechanical Group': [
       'Mechanical Engineering',
+      'Mechanical Engineering Automobile',
+      'Mechanical Engineering[Sandwich]',
+      'Mechanical & Automation Engineering',
+      'Mechanical and Mechatronics Engineering (Additive Manufacturing)',
       'Production Engineering',
-      'Manufacturing Engineering',
+      'Production Engineering[Sandwich]',
+      'Manufacturing Science and Engineering',
       'Automobile Engineering',
       'Mechatronics Engineering'
     ]

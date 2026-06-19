@@ -29,8 +29,8 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
     { num: 5, label: 'College Preference', desc: 'Select college type criteria' }
   ];
 
-  const categoriesList = ['OPEN', 'OBC', 'EWS', 'SC', 'ST', 'NT-A', 'NT-B', 'NT-C', 'NT-D', 'SBC', 'TFWS'];
-  const regionsList = ['Pune', 'Mumbai', 'Kolhapur', 'Sangli', 'Satara', 'Solapur', 'Nashik', 'Nagpur', 'Amravati', 'Aurangabad', 'Nanded', 'Entire Maharashtra'];
+  const categoriesList = ['OPEN', 'OBC', 'SEBC', 'EWS', 'SC', 'ST', 'NT-A', 'NT-B', 'NT-C', 'NT-D', 'TFWS'];
+  const regionsList = ['Pune', 'Mumbai', 'Nashik', 'Nagpur', 'Amravati', 'Aurangabad', 'Konkan', 'Entire Maharashtra'];
   
   const branchGroups = [
     {
@@ -54,9 +54,10 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
   ];
 
   const collegePrefsList = [
-    { id: 'Government Only', label: 'Government / Govt. Autonomous Only' },
-    { id: 'Autonomous Preferred', label: 'Autonomous Preferred' },
-    { id: 'Private Included', label: 'Private (Un-Aided) Included' },
+    { id: 'Government Only', label: 'Government / University Dept. Only' },
+    { id: 'Autonomous Preferred', label: 'Autonomous Colleges Preferred' },
+    { id: 'Aided Only', label: 'Aided Colleges Only' },
+    { id: 'Private Included', label: 'Un-Aided / Private Included' },
     { id: 'All Colleges', label: 'All Colleges (No filter)' }
   ];
 
@@ -177,7 +178,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
         
         {/* Left Progress Sidebar */}
         <div className="lg:col-span-4 flex flex-col space-y-6">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm space-y-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm space-y-6">
             <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white text-left">
               Prediction Process
             </h3>
@@ -231,7 +232,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
         </div>
 
         {/* Right Step Card Container */}
-        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col justify-between min-h-[460px]">
+        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-sm flex flex-col justify-between min-h-[460px]">
           
           <div className="space-y-6 text-left">
             {/* Header */}
@@ -265,7 +266,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
                     placeholder="Enter your name" 
                     value={name} 
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-150"
                   />
                 </div>
 
@@ -280,7 +281,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
                     placeholder="e.g. 89.45" 
                     value={percentage} 
                     onChange={(e) => setPercentage(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-150"
                   />
                 </div>
 
@@ -294,7 +295,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
                     placeholder="e.g. 9876543210" 
                     value={mobile} 
                     onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
-                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-150"
                   />
                 </div>
 
@@ -352,7 +353,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
                       )}
                     </div>
                     <span className="text-[10px] text-text-muted mt-2 font-semibold">
-                      {cat === 'OPEN' ? 'General Merit' : cat === 'TFWS' ? 'Merit Fee Waiver' : `${cat} Category`}
+                      {cat === 'OPEN' ? 'General Merit' : cat === 'TFWS' ? 'Merit Fee Waiver' : cat === 'SEBC' ? 'Socially & Educationally BC' : cat === 'EWS' ? 'Economically Weaker Section' : `${cat} Category`}
                     </span>
                   </button>
                 ))}

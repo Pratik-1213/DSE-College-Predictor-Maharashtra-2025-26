@@ -5,202 +5,148 @@ interface ChartsSectionProps {
   results: PredictionResult[];
 }
 
+const SEGMENTS = [
+  { key: 'Safe' as const,            color: '#16A34A', label: 'Safe' },
+  { key: 'High Chance' as const,     color: '#2563EB', label: 'High' },
+  { key: 'Moderate Chance' as const, color: '#F59E0B', label: 'Moderate' },
+  { key: 'Low Chance' as const,      color: '#EA580C', label: 'Low' },
+  { key: 'Dream' as const,           color: '#DC2626', label: 'Dream' },
+];
+
 export default function ChartsSection({ results }: ChartsSectionProps) {
-  // 1. Calculate Probability Distribution (Safe, High Chance, Moderate Chance, Low Chance, Dream)
-  const statusCounts = {
-    Safe: results.filter(r => r.chanceStatus === 'Safe').length,
-    'High Chance': results.filter(r => r.chanceStatus === 'High Chance').length,
-    'Moderate Chance': results.filter(r => r.chanceStatus === 'Moderate Chance').length,
-    'Low Chance': results.filter(r => r.chanceStatus === 'Low Chance').length,
-    Dream: results.filter(r => r.chanceStatus === 'Dream').length
-  };
-
   const total = results.length || 1;
-  const statusPercentages = {
-    Safe: Math.round((statusCounts.Safe / total) * 100),
-    'High Chance': Math.round((statusCounts['High Chance'] / total) * 100),
-    'Moderate Chance': Math.round((statusCounts['Moderate Chance'] / total) * 100),
-    'Low Chance': Math.round((statusCounts['Low Chance'] / total) * 100),
-    Dream: Math.round((statusCounts.Dream / total) * 100)
-  };
 
-  // SVG Donut Chart Calculation
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
-  let currentOffset = 0;
+  // ── Donut data ──────────────────────────────────────────────────────────────
+  const counts = SEGMENTS.map(s => ({ ...s, count: results.filter(r => r.chanceStatus === s.key).length }))
+    .filter(s => s.count > 0);
 
-  const donutSegments = [
-    { label: 'Safe', count: statusCounts.Safe, percent: statusPercentages.Safe, color: '#16A34A' }, // Green
-    { label: 'High', count: statusCounts['High Chance'], percent: statusPercentages['High Chance'], color: '#2563EB' }, // Blue
-    { label: 'Moderate', count: statusCounts['Moderate Chance'], percent: statusPercentages['Moderate Chance'], color: '#F59E0B' }, // Yellow
-    { label: 'Low', count: statusCounts['Low Chance'], percent: statusPercentages['Low Chance'], color: '#EA580C' }, // Orange
-    { label: 'Dream', count: statusCounts.Dream, percent: statusPercentages.Dream, color: '#DC2626' } // Red
-  ].filter(s => s.count > 0);
+  const radius = 48;
+  const circ = 2 * Math.PI * radius;
+  let cumulative = 0;
 
-  // 2. Region-Wise Opportunities (Top 5 regions)
-  const regionCounts: Record<string, number> = {};
-  results.forEach(r => {
-    regionCounts[r.college.region] = (regionCounts[r.college.region] || 0) + 1;
-  });
-
-  const topRegions = Object.entries(regionCounts)
+  // ── Region bars ─────────────────────────────────────────────────────────────
+  const regionMap: Record<string, number> = {};
+  results.forEach(r => { regionMap[r.college.region] = (regionMap[r.college.region] || 0) + 1; });
+  const topRegions = Object.entries(regionMap)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
+    .slice(0, 6);
+  const maxRegion = topRegions[0]?.count || 1;
 
-  const maxRegionCount = topRegions.length > 0 ? Math.max(...topRegions.map(r => r.count)) : 1;
-
-  // 3. Branch-Wise Opportunities (Top 5 branches)
-  const branchCounts: Record<string, number> = {};
+  // ── Branch bars ─────────────────────────────────────────────────────────────
+  const branchMap: Record<string, number> = {};
   results.forEach(r => {
-    // Standardize naming slightly for visualization
     let name = r.college.branch;
     if (name.includes('Computer Science and Engineering')) name = 'CSE';
-    else if (name.includes('Computer Engineering')) name = 'Computer Engg.';
+    else if (name.includes('Computer Engineering')) name = 'Computer Engg';
     else if (name.includes('Information Technology')) name = 'IT';
     else if (name.includes('Electronics and Telecommunication')) name = 'EXTC';
-    else if (name.includes('Artificial Intelligence and Data Science')) name = 'AI & DS';
+    else if (name.includes('Artificial Intelligence and Data Science') || name.includes('AI') && name.includes('Data Science')) name = 'AI & DS';
     else if (name.includes('Mechanical Engineering')) name = 'Mechanical';
     else if (name.includes('Electrical Engineering')) name = 'Electrical';
-    
-    branchCounts[name] = (branchCounts[name] || 0) + 1;
+    branchMap[name] = (branchMap[name] || 0) + 1;
   });
-
-  const topBranches = Object.entries(branchCounts)
+  const topBranches = Object.entries(branchMap)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
-
-  const maxBranchCount = topBranches.length > 0 ? Math.max(...topBranches.map(b => b.count)) : 1;
+    .slice(0, 6);
+  const maxBranch = topBranches[0]?.count || 1;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-      
-      {/* Card 1: Donut Chart - Probability Distribution */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col justify-between">
-        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white text-left mb-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      {/* ── Card 1: Donut ──────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
           Probability Distribution
         </h3>
-        
-        <div className="flex items-center justify-around h-full py-2">
-          {/* Donut Circle */}
-          <div className="relative w-28 h-28 flex items-center justify-center shrink-0">
-            <svg className="w-full h-full gauge-svg" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r={radius} className="gauge-bg" strokeWidth="12" />
-              {donutSegments.map((seg, idx) => {
-                const strokeDashoffset = circumference - (seg.count / total) * circumference;
-                const rotationOffset = (currentOffset / total) * circumference;
-                currentOffset += seg.count;
 
+        <div className="flex items-center justify-between gap-4">
+          {/* Donut */}
+          <div className="relative w-28 h-28 shrink-0">
+            <svg className="w-full h-full gauge-svg" viewBox="0 0 112 112">
+              <circle cx="56" cy="56" r={radius} fill="none" stroke="currentColor" strokeWidth="11" className="text-slate-100 dark:text-slate-800" />
+              {counts.map((seg, i) => {
+                const dash = (seg.count / total) * circ;
+                const offset = circ - (cumulative / total) * circ;
+                cumulative += seg.count;
                 return (
-                  <circle
-                    key={idx}
-                    cx="60"
-                    cy="60"
-                    r={radius}
-                    fill="none"
-                    stroke={seg.color}
-                    strokeWidth="12"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    style={{
-                      transform: `rotate(${(rotationOffset / circumference) * 360}deg)`,
-                      transformOrigin: '60px 60px',
-                      transition: 'all 0.5s ease'
-                    }}
+                  <circle key={i} cx="56" cy="56" r={radius} fill="none"
+                    stroke={seg.color} strokeWidth="11"
+                    strokeDasharray={`${dash} ${circ - dash}`}
+                    strokeDashoffset={offset}
+                    style={{ transition: 'all 0.5s ease' }}
                   />
                 );
               })}
             </svg>
-            <div className="absolute flex flex-col justify-center items-center">
-              <span className="font-display font-extrabold text-lg text-slate-800 dark:text-slate-100">
-                {results.length}
-              </span>
-              <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">
-                Matches
-              </span>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="font-display font-extrabold text-lg text-slate-800 dark:text-slate-100">{results.length}</span>
+              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total</span>
             </div>
           </div>
 
-          {/* Legends */}
-          <div className="flex flex-col space-y-1.5 text-left font-sans text-[11px] font-semibold pl-4">
-            {donutSegments.map((seg, idx) => (
-              <div key={idx} className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
-                <span className="text-slate-700 dark:text-slate-300">
-                  {seg.label}
-                </span>
-                <span className="text-text-muted">
-                  ({seg.count})
-                </span>
+          {/* Legend */}
+          <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            {counts.map((seg, i) => (
+              <div key={i} className="flex items-center justify-between gap-2 text-[11px] font-semibold">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
+                  <span className="text-slate-700 dark:text-slate-300 truncate">{seg.label}</span>
+                </div>
+                <span className="text-slate-500 dark:text-slate-400 shrink-0">{seg.count}</span>
               </div>
             ))}
-            {donutSegments.length === 0 && (
-              <span className="text-text-muted">No data available</span>
-            )}
+            {counts.length === 0 && <p className="text-[11px] text-slate-400 italic">No data</p>}
           </div>
         </div>
       </div>
 
-      {/* Card 2: Region-Wise Opportunities */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col justify-between">
-        <div>
-          <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white text-left mb-4">
-            Region Wise Opportunities
-          </h3>
-          <div className="space-y-4">
-            {topRegions.map((region, idx) => {
-              const widthPct = Math.max(12, Math.round((region.count / maxRegionCount) * 100));
-              return (
-                <div key={idx} className="flex flex-col space-y-1 text-left">
-                  <div className="flex justify-between items-center text-xs font-semibold">
-                    <span className="text-slate-700 dark:text-slate-300">{region.name}</span>
-                    <span className="text-primary font-bold">{region.count} colleges</span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${widthPct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-            {topRegions.length === 0 && (
-              <p className="text-text-muted text-xs py-4 text-center font-semibold">No region data available</p>
-            )}
-          </div>
+      {/* ── Card 2: Regions ────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
+          Region‑Wise Opportunities
+        </h3>
+        <div className="flex flex-col gap-3">
+          {topRegions.map((r, i) => (
+            <div key={i} className="space-y-1">
+              <div className="flex justify-between text-[11px] font-semibold">
+                <span className="text-slate-700 dark:text-slate-300 truncate max-w-[65%]">{r.name}</span>
+                <span className="text-primary font-bold">{r.count}</span>
+              </div>
+              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500"
+                  style={{ width: `${Math.max(6, Math.round((r.count / maxRegion) * 100))}%` }}
+                />
+              </div>
+            </div>
+          ))}
+          {topRegions.length === 0 && <p className="text-[11px] text-slate-400 italic text-center py-4">No data</p>}
         </div>
       </div>
 
-      {/* Card 3: Branch-Wise Opportunities */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col justify-between">
-        <div>
-          <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white text-left mb-4">
-            Branch Wise Opportunities
-          </h3>
-          <div className="space-y-4">
-            {topBranches.map((branch, idx) => {
-              const widthPct = Math.max(12, Math.round((branch.count / maxBranchCount) * 100));
-              return (
-                <div key={idx} className="flex flex-col space-y-1 text-left">
-                  <div className="flex justify-between items-center text-xs font-semibold">
-                    <span className="text-slate-700 dark:text-slate-300 truncate max-w-[170px]">{branch.name}</span>
-                    <span className="text-secondary font-bold">{branch.count} options</span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${widthPct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-            {topBranches.length === 0 && (
-              <p className="text-text-muted text-xs py-4 text-center font-semibold">No branch data available</p>
-            )}
-          </div>
+      {/* ── Card 3: Branches ───────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
+          Branch‑Wise Opportunities
+        </h3>
+        <div className="flex flex-col gap-3">
+          {topBranches.map((b, i) => (
+            <div key={i} className="space-y-1">
+              <div className="flex justify-between text-[11px] font-semibold">
+                <span className="text-slate-700 dark:text-slate-300 truncate max-w-[65%]">{b.name}</span>
+                <span className="text-secondary font-bold">{b.count}</span>
+              </div>
+              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500 transition-all duration-500"
+                  style={{ width: `${Math.max(6, Math.round((b.count / maxBranch) * 100))}%` }}
+                />
+              </div>
+            </div>
+          ))}
+          {topBranches.length === 0 && <p className="text-[11px] text-slate-400 italic text-center py-4">No data</p>}
         </div>
       </div>
 

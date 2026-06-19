@@ -69,7 +69,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background-custom text-card-foreground transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Navigation Header */}
       <Header 
         darkMode={darkMode} 
@@ -83,41 +83,43 @@ export default function App() {
         {view === 'landing' && (
           <HeroSection onStartPredicting={() => setView('predict')} />
         )}
-        
+
         {view === 'predict' && (
-          <PredictionForm 
-            onSubmit={handleFormSubmit} 
-            onBackToHome={() => setView('landing')} 
-          />
+          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen">
+            <PredictionForm
+              onSubmit={handleFormSubmit}
+              onBackToHome={() => setView('landing')}
+            />
+          </div>
         )}
 
         {view === 'loading' && (
-          <LoadingScreen onComplete={handleLoadingComplete} />
+          <div className="w-full flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen px-4">
+            <LoadingScreen onComplete={handleLoadingComplete} />
+          </div>
         )}
 
         {view === 'results' && studentProfile && (
-          <ResultsDashboard 
-            results={predictionResults} 
-            profile={studentProfile} 
-            onBack={() => setView('predict')} 
-          />
+          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19]">
+            <ResultsDashboard
+              results={predictionResults}
+              profile={studentProfile}
+              onBack={() => setView('predict')}
+            />
+          </div>
         )}
       </main>
 
-      {/* Footer Branding */}
-      <footer className="w-full bg-slate-900 text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 font-sans text-xs">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-left space-y-1.5">
-            <span className="font-display font-extrabold text-sm text-white tracking-wider">DSE College Predictor Maharashtra</span>
-            <p className="font-semibold text-slate-400">
-              Made with ❤️ for Diploma Students seeking Engineering Admissions.
-            </p>
+      {/* Footer */}
+      <footer className="w-full bg-slate-950 dark:bg-black/40 border-t border-slate-800 dark:border-slate-900 text-slate-400 py-7 px-4 sm:px-6 lg:px-8 font-sans text-xs">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="font-display font-extrabold text-sm text-white tracking-wide block">DSE College Predictor Maharashtra</span>
+            <p className="text-slate-400 font-medium">Made with ❤️ for Diploma students seeking Engineering admissions.</p>
           </div>
-          <div className="text-left md:text-right font-medium text-[11px] space-y-1">
-            <p>&copy; {new Date().getFullYear()} DSE Predictor Portal. All Rights Reserved.</p>
-            <p className="text-slate-500">
-              Disclaimer: Predictor results are advisory. Verify choices with the official CET Cell handbook.
-            </p>
+          <div className="text-left sm:text-right space-y-1 font-medium text-[11px]">
+            <p className="text-slate-400">&copy; {new Date().getFullYear()} DSE Predictor Portal. All Rights Reserved.</p>
+            <p className="text-slate-600">Results are advisory. Verify with the official CET Cell handbook.</p>
           </div>
         </div>
       </footer>
