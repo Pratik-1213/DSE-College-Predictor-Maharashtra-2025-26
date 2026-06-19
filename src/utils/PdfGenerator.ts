@@ -310,32 +310,70 @@ export function generatePdfReport(
   tips.forEach((tip, i) => doc.text(tip, ml + 4, ty + 12 + i * 5));
 
   // ── Developer card (after tips, before footer) ───────────────────────────
-  let dy = ty + 26 + 6;
-  if (dy + 20 > pageHeight - 20) { doc.addPage(); dy = 20; }
+  const cardH = 32;
+  let dy = ty + 26 + 8;
+  if (dy + cardH > pageHeight - 22) { doc.addPage(); dy = 20; }
 
-  doc.setDrawColor(37, 99, 235);
+  // Outer card — light blue background
+  doc.setDrawColor(186, 210, 255);
   doc.setFillColor(239, 246, 255);
-  doc.rect(ml, dy, contentW, 18, 'FD');
+  doc.roundedRect(ml, dy, contentW, cardH, 2, 2, 'FD');
 
+  // Left accent bar
+  doc.setFillColor(37, 99, 235);
+  doc.rect(ml, dy, 4, cardH, 'F');
+
+  // "DEVELOPED BY" label — small caps style
   doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(8);
+  doc.setFontSize(6.5);
   doc.setTextColor(37, 99, 235);
-  doc.text('Developed by', ml + 4, dy + 6);
+  doc.text('DEVELOPED BY', ml + 10, dy + 7);
 
+  // Developer name — large & prominent
   doc.setFont('Helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
-  doc.text('Pratik Sachin Kumbhar', ml + 4, dy + 12);
+  doc.text('Pratik Sachin Kumbhar', ml + 10, dy + 14);
 
+  // Tagline
   doc.setFont('Helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(71, 85, 105);
-  doc.text('pratik.1213.coep@gmail.com', ml + 56, dy + 12);
-
-  doc.setFontSize(7.5);
+  doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
-  doc.text('+91 73855 46546  |  Kolhapur / Pune, Maharashtra', ml + 4, dy + 17);
-  doc.text('linkedin.com/in/pratik-kumbhar-1213praa29b  |  github.com/Pratik-1213', ml + 100, dy + 17);
+  doc.text('Full-Stack Developer  |  Kolhapur / Pune, Maharashtra', ml + 10, dy + 20);
+
+  // Divider line
+  doc.setDrawColor(186, 210, 255);
+  doc.setLineWidth(0.3);
+  doc.line(ml + 10, dy + 23, ml + contentW - 6, dy + 23);
+
+  // Contact row — email | phone | linkedin | github
+  doc.setFontSize(6.8);
+  const iconY = dy + 28.5;
+
+  // Email icon placeholder dot + text
+  doc.setFillColor(37, 99, 235);
+  doc.circle(ml + 11, iconY - 1, 0.9, 'F');
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor(37, 99, 235);
+  doc.text('pratik.1213.coep@gmail.com', ml + 14, iconY);
+
+  // Phone
+  doc.setFillColor(100, 116, 139);
+  doc.circle(ml + 75, iconY - 1, 0.9, 'F');
+  doc.setTextColor(71, 85, 105);
+  doc.text('+91 73855 46546', ml + 78, iconY);
+
+  // LinkedIn
+  doc.setFillColor(10, 102, 194);
+  doc.circle(ml + 113, iconY - 1, 0.9, 'F');
+  doc.setTextColor(10, 102, 194);
+  doc.text('linkedin.com/in/pratik-kumbhar-1213praa29b', ml + 116, iconY);
+
+  // GitHub — right side
+  doc.setFillColor(36, 41, 47);
+  doc.circle(ml + 158, iconY - 1, 0.9, 'F');
+  doc.setTextColor(36, 41, 47);
+  doc.text('github.com/Pratik-1213', ml + 161, iconY);
 
   // ── Footer on every page ──────────────────────────────────────────────────
   const totalPages: number = (doc.internal as any).pages.length - 1;
