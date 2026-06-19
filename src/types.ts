@@ -7,6 +7,7 @@ export interface CollegeRecord {
   collegeName: string;
   code: string;
   region: string;
+  district?: string;
   type: string; // "Government", "Government Autonomous", "Aided", "Autonomous", "Private"
   branch: string;
   cutoffs: Record<string, CutoffEntry>;

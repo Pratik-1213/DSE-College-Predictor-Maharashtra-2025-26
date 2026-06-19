@@ -22,8 +22,14 @@ const REGIONS = ['Pune', 'Mumbai', 'Nashik', 'Nagpur', 'Amravati', 'Aurangabad',
 export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
   const [query, setQuery]         = useState('');
   const [region, setRegion]       = useState('All');
+  const [district, setDistrict]   = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
+
+  const handleRegionChange = (val: string) => {
+    setRegion(val);
+    setDistrict('All');
+  };
 
   // Get unique college types from data
   const collegeTypes = useMemo(() => {
@@ -31,6 +37,15 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
     dataset.forEach(r => s.add(r.type));
     return ['All', ...Array.from(s).sort()];
   }, [dataset]);
+
+  // Unique districts filtered by selected region
+  const uniqueDistricts = useMemo(() => {
+    const s = new Set<string>();
+    dataset
+      .filter(r => region === 'All' || r.region === region)
+      .forEach(r => { if (r.district) s.add(r.district); });
+    return ['All', ...Array.from(s).sort()];
+  }, [dataset, region]);
 
   // Group records by college name — all branches under one card
   const collegeGroups = useMemo(() => {
@@ -53,6 +68,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
     const q = query.toLowerCase().trim();
     return collegeGroups.filter(g => {
       if (region !== 'All' && g.info.region !== region) return false;
+      if (district !== 'All' && g.info.district !== district) return false;
       if (typeFilter !== 'All' && g.info.type !== typeFilter) return false;
       if (q) {
         const nameMatch = g.info.collegeName.toLowerCase().includes(q);
@@ -62,7 +78,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
       }
       return true;
     });
-  }, [collegeGroups, query, region, typeFilter]);
+  }, [collegeGroups, query, region, district, typeFilter]);
 
   const toggleExpand = (key: string) => {
     setExpandedCode(prev => prev === key ? null : key);
@@ -121,12 +137,24 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
             <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <select
               value={region}
-              onChange={e => setRegion(e.target.value)}
+              onChange={e => handleRegionChange(e.target.value)}
               className="border border-slate-200 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
               style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
             >
               <option value="All">All Regions</option>
               {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <MapPin className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+            <select
+              value={district}
+              onChange={e => setDistrict(e.target.value)}
+              className="border border-slate-200 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
+              style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
+            >
+              {uniqueDistricts.map(d => <option key={d} value={d}>{d === 'All' ? 'All Districts' : d}</option>)}
             </select>
           </div>
 

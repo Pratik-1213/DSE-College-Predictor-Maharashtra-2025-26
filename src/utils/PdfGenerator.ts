@@ -309,37 +309,63 @@ export function generatePdfReport(
   ];
   tips.forEach((tip, i) => doc.text(tip, ml + 4, ty + 12 + i * 5));
 
+  // ── Developer card (after tips, before footer) ───────────────────────────
+  let dy = ty + 26 + 6;
+  if (dy + 20 > pageHeight - 20) { doc.addPage(); dy = 20; }
+
+  doc.setDrawColor(37, 99, 235);
+  doc.setFillColor(239, 246, 255);
+  doc.rect(ml, dy, contentW, 18, 'FD');
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(37, 99, 235);
+  doc.text('Developed by', ml + 4, dy + 6);
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(15, 23, 42);
+  doc.text('Pratik Sachin Kumbhar', ml + 4, dy + 12);
+
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(71, 85, 105);
+  doc.text('pratik.1213.coep@gmail.com', ml + 56, dy + 12);
+
+  doc.setFontSize(7.5);
+  doc.setTextColor(100, 116, 139);
+  doc.text('+91 73855 46546  |  Kolhapur / Pune, Maharashtra', ml + 4, dy + 17);
+  doc.text('linkedin.com/in/pratik-kumbhar-1213praa29b  |  github.com/Pratik-1213', ml + 100, dy + 17);
+
   // ── Footer on every page ──────────────────────────────────────────────────
   const totalPages: number = (doc.internal as any).pages.length - 1;
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
-    const fy = pageHeight - 10;
+    const fy = pageHeight - 8;
 
     doc.setDrawColor(226, 232, 240);
     doc.setLineWidth(0.3);
-    doc.line(ml, fy - 3, pageWidth - mr, fy - 3);
+    doc.line(ml, fy - 4, pageWidth - mr, fy - 4);
 
-    // Left — advisory disclaimer
+    // Line 1 — advisory disclaimer (left) + page number (right)
     doc.setFont('Helvetica', 'italic');
     doc.setFontSize(6);
     doc.setTextColor(148, 163, 184);
     doc.text(
       'Advisory only — actual 2025-26 cutoffs may vary. Verify all choices with the official CET Cell handbook.',
-      ml, fy + 1
+      ml, fy - 1
     );
-
-    // Centre — developer credit
     doc.setFont('Helvetica', 'normal');
-    doc.setFontSize(6);
-    doc.setTextColor(148, 163, 184);
+    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy - 1, { align: 'right' });
+
+    // Line 2 — developer credit centred
+    doc.setFontSize(5.5);
+    doc.setTextColor(203, 213, 225);
     doc.text(
       'Developed by Pratik Sachin Kumbhar  |  pratik.1213.coep@gmail.com',
-      pageWidth / 2, fy + 1,
+      pageWidth / 2, fy + 3,
       { align: 'center' }
     );
-
-    // Right — page number
-    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy + 1, { align: 'right' });
   }
 
   doc.save(`DSE_Report_${profile.name.replace(/\s+/g, '_')}.pdf`);

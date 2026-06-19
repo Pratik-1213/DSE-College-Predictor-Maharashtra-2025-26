@@ -29,6 +29,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
   const [filterGovt, setFilterGovt] = useState(false);
   const [filterAuto, setFilterAuto] = useState(false);
   const [filterRegion, setFilterRegion] = useState('All');
+  const [filterDistrict, setFilterDistrict] = useState('All');
   const [minProbability, setMinProbability] = useState(0);
   const [chanceFilter, setChanceFilter] = useState('All');
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
@@ -40,11 +41,27 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
     return ['All', ...Array.from(s).sort()];
   }, [results]);
 
+  // Districts available for the selected region
+  const uniqueDistricts = useMemo(() => {
+    const s = new Set<string>();
+    results
+      .filter(r => filterRegion === 'All' || r.college.region === filterRegion)
+      .forEach(r => { if (r.college.district) s.add(r.college.district); });
+    return ['All', ...Array.from(s).sort()];
+  }, [results, filterRegion]);
+
+  // Reset district when region changes
+  const handleRegionChange = (val: string) => {
+    setFilterRegion(val);
+    setFilterDistrict('All');
+  };
+
   const processedResults = useMemo(() => {
     let list = [...results];
     if (filterGovt) list = list.filter(r => r.college.type === 'Government' || r.college.type === 'Government Autonomous' || r.college.type === 'University Department');
     if (filterAuto) list = list.filter(r => r.college.autonomous);
     if (filterRegion !== 'All') list = list.filter(r => r.college.region === filterRegion);
+    if (filterDistrict !== 'All') list = list.filter(r => r.college.district === filterDistrict);
     if (minProbability > 0) list = list.filter(r => r.probability >= minProbability);
     if (chanceFilter !== 'All') list = list.filter(r => r.chanceStatus === chanceFilter);
 
@@ -57,7 +74,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       list.sort((a, b) => (b.college.autonomous ? 1 : 0) - (a.college.autonomous ? 1 : 0) || b.cutoffPercent - a.cutoffPercent);
     }
     return list;
-  }, [results, sortBy, filterGovt, filterAuto, filterRegion, minProbability, chanceFilter]);
+  }, [results, sortBy, filterGovt, filterAuto, filterRegion, filterDistrict, minProbability, chanceFilter]);
 
   const stats: DashboardStats = useMemo(() => getDashboardStats(processedResults), [processedResults]);
   const strategyColleges = useMemo(() => generateCapStrategy(processedResults), [processedResults]);
@@ -115,10 +132,22 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Region</label>
         <select
           value={filterRegion}
-          onChange={e => setFilterRegion(e.target.value)}
+          onChange={e => handleRegionChange(e.target.value)}
           className="w-full bg-slate-50 border border-slate-200 text-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
         >
           {uniqueRegions.map(r => <option key={r} value={r}>{r === 'All' ? 'All Regions' : r}</option>)}
+        </select>
+      </div>
+
+      {/* District */}
+      <div className="space-y-1.5">
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">District</label>
+        <select
+          value={filterDistrict}
+          onChange={e => setFilterDistrict(e.target.value)}
+          className="w-full bg-slate-50 border border-slate-200 text-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
+        >
+          {uniqueDistricts.map(d => <option key={d} value={d}>{d === 'All' ? 'All Districts' : d}</option>)}
         </select>
       </div>
 
@@ -158,9 +187,9 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       </div>
 
       {/* Reset */}
-      {(filterGovt || filterAuto || filterRegion !== 'All' || chanceFilter !== 'All' || minProbability > 0) && (
+      {(filterGovt || filterAuto || filterRegion !== 'All' || filterDistrict !== 'All' || chanceFilter !== 'All' || minProbability > 0) && (
         <button
-          onClick={() => { setFilterGovt(false); setFilterAuto(false); setFilterRegion('All'); setChanceFilter('All'); setMinProbability(0); }}
+          onClick={() => { setFilterGovt(false); setFilterAuto(false); setFilterRegion('All'); setFilterDistrict('All'); setChanceFilter('All'); setMinProbability(0); }}
           className="w-full text-xs font-bold text-slate-500 hover:text-red-500 border border-slate-200 hover:border-red-300 py-2 rounded-lg transition-colors cursor-pointer"
         >
           Reset Filters
