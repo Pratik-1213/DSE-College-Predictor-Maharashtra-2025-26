@@ -313,19 +313,33 @@ export function generatePdfReport(
   const totalPages: number = (doc.internal as any).pages.length - 1;
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
-    const fy = pageHeight - 8;
+    const fy = pageHeight - 10;
+
     doc.setDrawColor(226, 232, 240);
     doc.setLineWidth(0.3);
-    doc.line(ml, fy - 2, pageWidth - mr, fy - 2);
+    doc.line(ml, fy - 3, pageWidth - mr, fy - 3);
+
+    // Left — advisory disclaimer
     doc.setFont('Helvetica', 'italic');
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     doc.setTextColor(148, 163, 184);
     doc.text(
       'Advisory only — actual 2025-26 cutoffs may vary. Verify all choices with the official CET Cell handbook.',
       ml, fy + 1
     );
+
+    // Centre — developer credit
     doc.setFont('Helvetica', 'normal');
-    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr - 18, fy + 1);
+    doc.setFontSize(6);
+    doc.setTextColor(148, 163, 184);
+    doc.text(
+      'Developed by Pratik Sachin Kumbhar  |  kumbharpratik1312@gmail.com',
+      pageWidth / 2, fy + 1,
+      { align: 'center' }
+    );
+
+    // Right — page number
+    doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy + 1, { align: 'right' });
   }
 
   doc.save(`DSE_Report_${profile.name.replace(/\s+/g, '_')}.pdf`);
