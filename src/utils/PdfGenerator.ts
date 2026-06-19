@@ -70,9 +70,10 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
   doc.setLineWidth(0.3);
   doc.line(ml, lastY + 1.5, pageWidth - mr, lastY + 1.5);
 
+  let notesEndY = lastY + 8;
   for (let i = 0; i < Math.min(shortlist.length, 15); i++) {
     const rowY = lastY + 8 + i * 9;
-    if (rowY + 9 > pageHeight - 16) break;
+    if (rowY + 9 > pageHeight - 60) break;
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(7);
     doc.setTextColor(15, 23, 42);
@@ -80,7 +81,68 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
     doc.setDrawColor(203, 213, 225);
     doc.setLineWidth(0.2);
     doc.line(ml + 70, rowY + 1, pageWidth - mr, rowY + 1);
+    notesEndY = rowY + 9;
   }
+
+  // ── Developer card ────────────────────────────────────────────────────────
+  const devCardH = 38;
+  let devY = notesEndY + 8;
+  if (devY + devCardH > pageHeight - 22) { doc.addPage(); devY = 20; }
+
+  doc.setDrawColor(186, 210, 255);
+  doc.setFillColor(239, 246, 255);
+  doc.roundedRect(ml, devY, contentW, devCardH, 2, 2, 'FD');
+
+  doc.setFillColor(37, 99, 235);
+  doc.rect(ml, devY, 4, devCardH, 'F');
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(37, 99, 235);
+  doc.text('DEVELOPED BY', ml + 10, devY + 7);
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(15, 23, 42);
+  doc.text('Pratik Sachin Kumbhar', ml + 10, devY + 14);
+
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(100, 116, 139);
+  doc.text('Full-Stack Developer  |  Kolhapur / Pune, Maharashtra', ml + 10, devY + 20);
+
+  doc.setDrawColor(186, 210, 255);
+  doc.setLineWidth(0.3);
+  doc.line(ml + 10, devY + 24, ml + contentW - 6, devY + 24);
+
+  const dr1Y = devY + 29.5;
+  doc.setFontSize(6.8);
+
+  doc.setFillColor(37, 99, 235);
+  doc.circle(ml + 11, dr1Y - 1, 0.9, 'F');
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor(37, 99, 235);
+  doc.text('pratik.1213.coep@gmail.com', ml + 14, dr1Y);
+  doc.link(ml + 14, dr1Y - 3, 52, 4, { url: 'mailto:pratik.1213.coep@gmail.com' });
+
+  doc.setFillColor(71, 85, 105);
+  doc.circle(ml + 95, dr1Y - 1, 0.9, 'F');
+  doc.setTextColor(71, 85, 105);
+  doc.text('+91 73855 46546', ml + 98, dr1Y);
+
+  const dr2Y = devY + 35.5;
+
+  doc.setFillColor(10, 102, 194);
+  doc.circle(ml + 11, dr2Y - 1, 0.9, 'F');
+  doc.setTextColor(10, 102, 194);
+  doc.text('linkedin.com/in/pratik-kumbhar-1213praa29b', ml + 14, dr2Y);
+  doc.link(ml + 14, dr2Y - 3, 78, 4, { url: 'https://www.linkedin.com/in/pratik-kumbhar-1213praa29b/' });
+
+  doc.setFillColor(36, 41, 47);
+  doc.circle(ml + 95, dr2Y - 1, 0.9, 'F');
+  doc.setTextColor(36, 41, 47);
+  doc.text('github.com/Pratik-1213', ml + 98, dr2Y);
+  doc.link(ml + 98, dr2Y - 3, 38, 4, { url: 'https://github.com/Pratik-1213' });
 
   // Footer
   const totalPages: number = (doc.internal as any).pages.length - 1;
