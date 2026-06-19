@@ -1,140 +1,169 @@
-# 🎓 DSE College Predictor Maharashtra
+# DSE College Predictor Maharashtra 2025-26
 
 [![React](https://img.shields.io/badge/React-19-blue.svg?logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC.svg?logo=tailwind-css)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.0-646CFF.svg?logo=vite)](https://vite.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An advanced, fully client-side interactive web application designed for Diploma Engineering students seeking **Direct Second Year (DSE) Engineering Admissions** in Maharashtra. It parses and analyzes previous CAP Round 1 cutoff data to accurately predict admission possibilities, build strategic option forms, and generate detailed PDF reports.
+A free, fully client-side web tool for Diploma Engineering students appearing in **Direct Second Year (DSE)** admissions in Maharashtra. Enter your score, category, and preferences — get ranked college recommendations, a ready-to-use CAP option form order, college cutoff explorer, and a downloadable PDF strategy report. All powered by official CAP Round I cutoff data from 2024-25. No login, no backend, no ads.
 
 ---
 
-## 🚀 Key Features
+## Features
 
-### 1. **High-Fidelity Admission Predictor**
-* **Accurate Data Matching:** Searches a local database of **2,000+ course cutoffs** extracted from official DTE Maharashtra CAP Round 1 cutoff sheets.
-* **Smart Probability Scoring:** Uses a custom bracket engine that accounts for positive/negative score differences to assign categories: **Safe**, **High Chance**, **Moderate Chance**, **Low Chance**, or **Dream**.
-* **DTE Code Parsing:** Automatically accommodates 4-digit and 5-digit DTE college codes (e.g., COEP's code `16006`).
+### Admission Predictor
+- Matches your diploma percentage against 2,010 CAP Round I cutoff records
+- Supports all reservation categories: OPEN, OBC, SEBC, EWS, SC, ST, NT-A, NT-B, NT-C, NT-D, TFWS — and separate Lady (female) seat cutoffs
+- Filters by region, college type (Government / Aided / Un-Aided / Autonomous), and branch group
+- Probability score assigned to every result: Safe · High Chance · Moderate · Low Chance · Dream
 
-### 2. **Interactive Results & Advanced Filtering**
-* **Prestige-First Sorting:** Defaults to **Highest Cutoff (Prestige)** so candidates see top-tier options matching their caliber. Also supports **Government First**, **Autonomous First**, and **Highest Probability** sorting.
-* **Granular Filters:** Filter matches instantly by College Type (Government, Aided, Private), Autonomous Status, Region (Pune, Mumbai, Nagpur, etc.), Choice Category (OBC, SC, ST, EWS, Open), and minimum admission probability.
+### Results Dashboard
+- Sort by prestige (highest cutoff), probability, government-first, or autonomous-first
+- Filter by region, chance status, and minimum probability slider
+- Compare up to 3 colleges side-by-side
 
-### 3. **🏆 Best Match Highlight Card**
-* Automatically calculates and displays the single **best recommended college** (the most prestigious, highest-cutoff college in Pune/Maharashtra that is within the candidate's qualification bracket).
+### CAP Option Form Strategy
+Correct ordering for Maharashtra CAP (which freezes you at the first allotment):
+1. **Dream** — try for the best seat first
+2. **Aspirational** (Low Chance) — ambitious but worth trying
+3. **Realistic** (Moderate Chance)
+4. **Good Chance** (High Chance)
+5. **Safe Backup** — guaranteed fallback at the bottom
 
-### 4. **College Comparison Matrix**
-* Compare up to **3 colleges side-by-side** on choice codes, branch details, college management types, regions, previous cutoffs, and candidate's matching probability.
-* Responsive card stack layout on mobile devices.
+### College & Cutoff Explorer
+- Search any college by name, branch, or choice code
+- Filter by region and college type
+- Expand any college to see a full cutoff table — percentile + rank for every available category
 
-### 5. **Strategic CAP Option Form Generator**
-* Simulates the official CAP option form process by dividing recommended colleges into optimal sequence brackets:
-  * 🌟 **Dream Choices (Top 20%)**: Ambitious targets slightly above candidate score.
-  * ⚖️ **Realistic Matches (Middle 50%)**: Solid matches matching the candidate's score.
-  * 🛡️ **Safe Backups (Bottom 30%)**: Guaranteed backups to secure admission.
+### PDF Report
+Two-page downloadable report: candidate info, top-10 recommended colleges, CAP form order, comparison matrix, and strategy tips.
 
-### 6. **Custom SVG Charts Dashboard**
-* **Chance Distribution:** Radial donut chart showcasing count of Safe vs. Moderate vs. Dream matches.
-* **Opportunity Bars:** Visual breakdown of branch-wise and region-wise matching options.
-
-### 7. **Print-Ready PDF Exporter**
-* Instantly generate and download a professional, beautifully styled **PDF Admission Report** containing candidate profiles, matched colleges, comparison matrix, and the recommended CAP option form list.
-
----
-
-## 🛠️ Tech Stack & Libraries
-
-* **Framework:** React 19 + TypeScript (TSX)
-* **Build Tool:** Vite (Ultra-fast Hot Module Replacement)
-* **Styling:** Tailwind CSS v4 (Harmonious colors, responsive flexgrids, and modern glassmorphic overlays)
-* **Icons:** Lucide React
-* **PDF Exporter:** jsPDF & jsPDF-AutoTable (Client-side vector table compilation)
-* **Animations & Micro-interactions:** Canvas Confetti
+### Analytics
+- Probability distribution chart (Safe / High / Moderate / Low / Dream counts)
+- Region-wise and branch-wise opportunity breakdown
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
 
-```bash
-dse-college-predictor/
-├── public/                  # Static assets
-├── src/
-│   ├── components/
-│   │   ├── CapStrategy.tsx        # CAP Form sequencing logic & visual list
-│   │   ├── ChartsSection.tsx      # SVG-based opportunity bar & donut charts
-│   │   ├── ComparisonSection.tsx  # Side-by-side college comparison card table
-│   │   ├── Header.tsx             # Navbar, light/dark theme toggle, subheadings
-│   │   ├── HeroSection.tsx        # Visual landing page hero
-│   │   ├── LoadingScreen.tsx      # Micro-interaction loading animations
-│   │   ├── PredictionForm.tsx     # Multi-step onboarding student profile intake
-│   │   └── ResultsDashboard.tsx   # Dashboard with filters, search, & result cards
-│   ├── data/
-│   │   └── cutoff_data.json       # Parsed CAP cutoff dataset (2,044 courses)
-│   ├── utils/
-│   │   ├── PdfGenerator.ts        # jsPDF layout renderer with custom styles
-│   │   └── predictionEngine.ts    # Logic for admission probabilities and stats
-│   ├── types.ts                   # Unified TypeScript Interfaces
-│   ├── App.tsx                    # Core app states & theme controller
-│   ├── App.css                    # Component specific styling overrides
-│   ├── index.css                  # Core CSS variables & Tailwind directives
-│   └── main.tsx                   # Render entry point
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+| Layer | Library / Tool |
+|---|---|
+| UI Framework | React 19 + TypeScript |
+| Build | Vite 8 |
+| Styling | Tailwind CSS v4 |
+| Icons | Lucide React |
+| PDF | jsPDF 4 + jsPDF-AutoTable 5 |
+| Animations | Framer Motion |
+
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── Header.tsx             # Navigation bar
+│   ├── HeroSection.tsx        # Landing page
+│   ├── PredictionForm.tsx     # Multi-step student input form
+│   ├── LoadingScreen.tsx      # Animated loading screen
+│   ├── ResultsDashboard.tsx   # Results with filters and college cards
+│   ├── CapStrategy.tsx        # CAP option form order
+│   ├── ComparisonSection.tsx  # Side-by-side college comparison
+│   ├── ChartsSection.tsx      # Probability + analytics charts
+│   └── CollegeSearch.tsx      # College & cutoff explorer
+├── utils/
+│   ├── predictionEngine.ts    # Matching + probability engine + CAP strategy
+│   └── PdfGenerator.ts        # PDF report layout
+├── data/
+│   └── cutoff_data.json       # CAP Round I 2024-25 dataset (2,010 records)
+├── types.ts                   # TypeScript interfaces
+├── App.tsx                    # Root component + view routing
+└── index.css                  # CSS variables + Tailwind base
 ```
 
 ---
 
-## 🚦 Admission Logic Brackets
+## Admission Probability Logic
 
-Admission probability calculations are processed dynamically based on the difference between the **Student's Diploma Percentage** and the **Category Cutoff Value**:
+| Gap (Your % − Cutoff %) | Status | Probability |
+|---|---|---|
+| ≥ +0.5% | Safe | 90 – 99% |
+| 0% to +0.5% | High Chance | 75 – 89% |
+| −1.0% to 0% | Moderate Chance | 50 – 74% |
+| −2.5% to −1.0% | Low Chance | 25 – 49% |
+| < −2.5% | Dream | 5 – 24% |
 
-$$\text{Difference} = \text{Student Percent} - \text{Cutoff Percent}$$
-
-| Score Difference | Chance Status | Probability Range | Action |
-|---|---|---|---|
-| $\ge +0.5\%$ | **Safe** | $90\% - 99\%$ | Safe Backup Seat |
-| $0.0\%$ to $+0.49\%$ | **High Chance** | $75\% - 89\%$ | Ideal Target |
-| $-1.0\%$ to $-0.01\%$ | **Moderate Chance** | $50\% - 74\%$ | Competitive Try |
-| $-2.5\%$ to $-1.01\%$ | **Low Chance** | $25\% - 49\%$ | Ambitious Try |
-| $< -2.5\%$ | **Dream** | $5\% - 24\%$ | Dream Option |
+Category key lookup order: category-specific key first (e.g. `GOBC`), then lady seat variant if female (e.g. `LOBC`), then fallback to `GOPEN` / `LOPEN`.
 
 ---
 
-## 💻 Local Setup & Development
+## Local Development
 
-### 1. Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed (v18 or higher is recommended).
+**Prerequisites:** Node.js 18+
 
-### 2. Installation
-Clone the repository and install the dependencies:
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/dse-college-predictor.git
-
-# Navigate to project folder
-cd dse-college-predictor
-
-# Install dependencies
+git clone https://github.com/your-username/dse-predictor.git
+cd dse-predictor
 npm install
+npm run dev        # http://localhost:5173
+npm run build      # production build → dist/
 ```
-
-### 3. Running Dev Server
-Launch Vite dev server:
-```bash
-npm run dev
-```
-Open **`http://localhost:5173`** in your browser.
-
-### 4. Build for Production
-To bundle and optimize the application for static hosting (GitHub Pages, Vercel, Netlify):
-```bash
-npm run build
-```
-The production bundle will be created inside the `dist` directory.
 
 ---
 
-## 📜 License
-This project is licensed under the MIT License. Feel free to use and customize it.
+## Deploy to Vercel
+
+### Option A — Vercel Dashboard (recommended)
+
+1. Push this repo to GitHub
+2. Go to [vercel.com](https://vercel.com) → **Add New Project**
+3. Import the GitHub repository
+4. Vercel auto-detects Vite — no config needed:
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+5. Click **Deploy** — live in ~60 seconds
+
+### Option B — Vercel CLI
+
+```bash
+npm i -g vercel
+vercel          # follow prompts, auto-detects Vite
+```
+
+No environment variables required. The app is fully static — no server, no database.
+
+---
+
+## Cutoff Data Format
+
+```json
+{
+  "collegeName": "COEP Technological University",
+  "choiceCode": "1600624210",
+  "region": "Pune",
+  "type": "Government",
+  "autonomous": true,
+  "branch": "Computer Science and Engineering",
+  "cutoffs": {
+    "GOPEN": { "rank": 142,  "percentile": 97.93 },
+    "GOBC":  { "rank": 1282, "percentile": 97.06 },
+    "LOPEN": { "rank": null, "percentile": null }
+  }
+}
+```
+
+Key format: `G` = General merit, `L` = Lady (female) seat, suffix = category code. Null entries mean no seat was filled in that category in 2024-25.
+
+---
+
+## Disclaimer
+
+Predictions are based on CAP Round I cutoffs from **2024-25**. Actual cutoffs for 2025-26 may vary. Use this tool for planning only — always verify with the official **Maharashtra State CET Cell** handbook.
+
+---
+
+## License
+
+MIT — free to use, fork, and build upon.
+
