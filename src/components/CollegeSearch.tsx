@@ -77,23 +77,23 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={onBack}
-          className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors cursor-pointer shrink-0"
+          className="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-500 transition-colors cursor-pointer shrink-0"
           aria-label="Back"
         >
           <ArrowLeft className="w-4.5 h-4.5" />
         </button>
         <div>
-          <h2 className="font-display font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white">
+          <h2 className="font-display font-extrabold text-lg sm:text-xl text-slate-900">
             College & Cutoff Explorer
           </h2>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+          <p className="text-[11px] text-slate-500 font-medium mt-0.5">
             Search any college to view its previous year CAP cutoffs across all categories
           </p>
         </div>
       </div>
 
       {/* Search + Filters */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4">
         {/* Search input */}
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -102,13 +102,13 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search by college name, branch, or choice code…"
-            className="w-full pl-10 pr-10 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-colors"
+            className="w-full pl-10 pr-10 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-colors"
             style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -122,7 +122,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
             <select
               value={region}
               onChange={e => setRegion(e.target.value)}
-              className="border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
+              className="border border-slate-200 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
               style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
             >
               <option value="All">All Regions</option>
@@ -135,14 +135,14 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
             <select
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value)}
-              className="border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
+              className="border border-slate-200 px-3 py-2 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary cursor-pointer"
               style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
             >
               {collegeTypes.map(t => <option key={t} value={t}>{t === 'All' ? 'All Types' : t}</option>)}
             </select>
           </div>
 
-          <span className="ml-auto text-xs font-bold text-slate-500 dark:text-slate-400 self-center">
+          <span className="ml-auto text-xs font-bold text-slate-500 self-center">
             {filtered.length} college{filtered.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -151,9 +151,9 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
       {/* Results list */}
       <div className="space-y-3">
         {filtered.length === 0 && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
-            <GraduationCap className="w-10 h-10 text-slate-300 dark:text-slate-700 mx-auto mb-3" />
-            <p className="font-display font-bold text-sm text-slate-600 dark:text-slate-300">No colleges found</p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
+            <GraduationCap className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <p className="font-display font-bold text-sm text-slate-600">No colleges found</p>
             <p className="text-[11px] text-slate-400 mt-1">Try a different name, branch, or remove filters</p>
           </div>
         )}
@@ -173,7 +173,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
           return (
             <div
               key={key}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
               {/* College header row */}
               <button
@@ -184,62 +184,62 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`text-[9px] font-bold px-2 py-0.5 rounded border uppercase ${
                       g.info.type.includes('Government')
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : g.info.type === 'Aided'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
+                        ? 'bg-blue-50 text-blue-700 border-blue-200'
+                        : 'bg-slate-100 text-slate-600 border-slate-200'
                     }`}>
                       {g.info.type}
                     </span>
                     {g.info.autonomous && (
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded border bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800 uppercase">
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded border bg-amber-50 text-amber-700 border-amber-200 uppercase">
                         AUTO
                       </span>
                     )}
-                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                    <span className="text-[10px] font-semibold text-slate-400">
                       <MapPin className="w-2.5 h-2.5 inline mr-0.5" />
                       {g.info.region}
                     </span>
-                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                    <span className="text-[10px] font-semibold text-slate-400">
                       {g.branches.length} branch{g.branches.length !== 1 ? 'es' : ''}
                     </span>
                   </div>
-                  <h3 className="font-display font-extrabold text-[13px] sm:text-sm text-slate-900 dark:text-white leading-snug group-hover:text-primary transition-colors">
+                  <h3 className="font-display font-extrabold text-[13px] sm:text-sm text-slate-900 leading-snug group-hover:text-primary transition-colors">
                     {g.info.collegeName}
                   </h3>
                 </div>
-                <div className="shrink-0 text-slate-400 dark:text-slate-500 mt-0.5">
+                <div className="shrink-0 text-slate-400 mt-0.5">
                   {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </div>
               </button>
 
               {/* Expanded: branch-wise cutoff table */}
               {open && (
-                <div className="border-t border-slate-100 dark:border-slate-800">
+                <div className="border-t border-slate-100">
                   <div className="overflow-x-auto">
                     <table className="w-full text-[11px]">
                       <thead>
-                        <tr className="bg-slate-50 dark:bg-slate-800/60">
-                          <th className="text-left px-4 py-2.5 font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px] whitespace-nowrap sticky left-0 bg-slate-50 dark:bg-slate-800/60 min-w-[180px]">
+                        <tr className="bg-slate-50">
+                          <th className="text-left px-4 py-2.5 font-bold text-slate-500 uppercase tracking-wider text-[10px] whitespace-nowrap sticky left-0 bg-slate-50 min-w-[180px]">
                             Branch
                           </th>
-                          <th className="text-center px-3 py-2.5 font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px] whitespace-nowrap">
+                          <th className="text-center px-3 py-2.5 font-bold text-slate-500 uppercase tracking-wider text-[10px] whitespace-nowrap">
                             Code
                           </th>
                           {availableCats.map(cat => (
-                            <th key={cat} className="text-center px-3 py-2.5 font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px] whitespace-nowrap">
+                            <th key={cat} className="text-center px-3 py-2.5 font-bold text-slate-500 uppercase tracking-wider text-[10px] whitespace-nowrap">
                               {CAT_LABELS[cat] ?? cat}
                             </th>
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                      <tbody className="divide-y divide-slate-100">
                         {g.branches.map((branch, i) => (
-                          <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                            <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-100 sticky left-0 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors whitespace-nowrap max-w-xs truncate" title={branch.branch}>
+                          <tr key={i} className="hover:bg-slate-50 transition-colors">
+                            <td className="px-4 py-3 font-semibold text-slate-800 sticky left-0 bg-white hover:bg-slate-50 transition-colors whitespace-nowrap max-w-xs truncate" title={branch.branch}>
                               {branch.branch}
                             </td>
-                            <td className="px-3 py-3 text-center font-mono text-[10px] text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                            <td className="px-3 py-3 text-center font-mono text-[10px] text-slate-500 whitespace-nowrap">
                               {branch.choiceCode}
                             </td>
                             {availableCats.map(cat => {
@@ -250,13 +250,13 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
                                 <td key={cat} className="px-3 py-3 text-center whitespace-nowrap">
                                   {pct !== null ? (
                                     <div className="space-y-0.5">
-                                      <div className="font-bold text-slate-900 dark:text-white">{pct}%</div>
+                                      <div className="font-bold text-slate-900">{pct}%</div>
                                       {rank !== null && (
-                                        <div className="text-[9px] text-slate-400 dark:text-slate-500">Rank {rank.toLocaleString('en-IN')}</div>
+                                        <div className="text-[9px] text-slate-400">Rank {rank.toLocaleString('en-IN')}</div>
                                       )}
                                     </div>
                                   ) : (
-                                    <span className="text-slate-300 dark:text-slate-700">—</span>
+                                    <span className="text-slate-300">—</span>
                                   )}
                                 </td>
                               );
@@ -273,7 +273,7 @@ export default function CollegeSearch({ dataset, onBack }: CollegeSearchProps) {
         })}
 
         {filtered.length > 80 && (
-          <p className="text-center text-[11px] text-slate-400 dark:text-slate-500 font-medium py-4">
+          <p className="text-center text-[11px] text-slate-400 font-medium py-4">
             Showing 80 of {filtered.length} results. Refine your search to narrow down.
           </p>
         )}

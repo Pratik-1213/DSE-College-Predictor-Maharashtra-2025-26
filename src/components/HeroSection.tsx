@@ -114,22 +114,22 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
 
       {/* ── Stats Bar ─────────────────────────────────────── */}
       <section id="stats" className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20">
-        <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-7 grid grid-cols-2 lg:grid-cols-4">
+        <div className="w-full bg-white border border-slate-200 rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-7 grid grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, idx) => (
             <div
               key={idx}
               className={`flex flex-col items-center justify-center text-center py-3 px-4
-                ${idx === 1 || idx === 3 ? 'border-l border-slate-100 dark:border-slate-800' : ''}
-                ${idx >= 2 ? 'border-t border-slate-100 dark:border-slate-800 lg:border-t-0' : ''}
+                ${idx === 1 || idx === 3 ? 'border-l border-slate-100' : ''}
+                ${idx >= 2 ? 'border-t border-slate-100 lg:border-t-0' : ''}
                 lg:border-l lg:first:border-l-0`}
             >
               <span className="font-display font-extrabold text-2xl sm:text-3xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 {stat.value}
               </span>
-              <span className="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 mt-1">
+              <span className="font-bold text-xs sm:text-sm text-slate-800 mt-1">
                 {stat.label}
               </span>
-              <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-0.5">
                 {stat.desc}
               </span>
             </div>
@@ -138,13 +138,13 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
       </section>
 
       {/* ── Features Grid ─────────────────────────────────── */}
-      <section id="features" className="w-full bg-white dark:bg-[#0B0F19] border-t border-slate-100 dark:border-slate-900 mt-8 sm:mt-12">
+      <section id="features" className="w-full bg-white border-t border-slate-100 mt-8 sm:mt-12">
         <div className="max-w-7xl mx-auto py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-            <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white">
+            <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900">
               Smart Tools for DSE Admissions
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base font-medium leading-relaxed">
+            <p className="text-slate-500 text-sm sm:text-base font-medium leading-relaxed">
               Everything you need to make confident choices during Maharashtra's Centralized Admission Process.
             </p>
           </div>
@@ -153,16 +153,16 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
             {features.map((feat, idx) => (
               <div
                 key={idx}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-4 text-left group"
+                className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-4 text-left group"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                   {feat.icon}
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="font-display font-bold text-sm sm:text-[15px] text-slate-900 dark:text-white">
+                  <h3 className="font-display font-bold text-sm sm:text-[15px] text-slate-900">
                     {feat.title}
                   </h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-[13px] font-medium leading-relaxed">
+                  <p className="text-slate-500 text-xs sm:text-[13px] font-medium leading-relaxed">
                     {feat.desc}
                   </p>
                 </div>

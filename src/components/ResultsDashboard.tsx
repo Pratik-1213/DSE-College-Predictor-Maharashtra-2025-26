@@ -17,11 +17,11 @@ interface ResultsDashboardProps {
 }
 
 const CHANCE_STYLES: Record<string, { color: string; bg: string; border: string; text: string }> = {
-  Safe: { color: '#16A34A', bg: 'bg-emerald-500/10 dark:bg-emerald-500/15', border: 'border-emerald-500/30', text: 'text-emerald-700 dark:text-emerald-400' },
-  'High Chance': { color: '#2563EB', bg: 'bg-blue-500/10 dark:bg-blue-500/15', border: 'border-blue-500/30', text: 'text-blue-700 dark:text-blue-400' },
-  'Moderate Chance': { color: '#F59E0B', bg: 'bg-amber-500/10 dark:bg-amber-500/15', border: 'border-amber-500/30', text: 'text-amber-700 dark:text-amber-400' },
-  'Low Chance': { color: '#EA580C', bg: 'bg-orange-500/10 dark:bg-orange-500/15', border: 'border-orange-500/30', text: 'text-orange-700 dark:text-orange-400' },
-  Dream: { color: '#DC2626', bg: 'bg-red-500/10 dark:bg-red-500/15', border: 'border-red-500/30', text: 'text-red-700 dark:text-red-400' },
+  Safe: { color: '#16A34A', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-700' },
+  'High Chance': { color: '#2563EB', bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-700' },
+  'Moderate Chance': { color: '#F59E0B', bg: 'bg-amber-500/10', border: 'border-amber-500/30', text: 'text-amber-700' },
+  'Low Chance': { color: '#EA580C', bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-700' },
+  Dream: { color: '#DC2626', bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-700' },
 };
 
 export default function ResultsDashboard({ results, profile, onBack }: ResultsDashboardProps) {
@@ -78,11 +78,11 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
     <div className="space-y-5">
       {/* Sort */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Sort By</label>
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Sort By</label>
         <select
           value={sortBy}
           onChange={e => setSortBy(e.target.value as any)}
-          className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
+          className="w-full bg-slate-50 border border-slate-200 text-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
         >
           <option value="cutoff">Highest Cutoff (Prestige)</option>
           <option value="prob">Highest Probability</option>
@@ -93,17 +93,17 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
 
       {/* Management toggles */}
       <div className="space-y-2">
-        <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Management</label>
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Management</label>
         {[
           { label: 'Government Only', val: filterGovt, set: setFilterGovt },
           { label: 'Autonomous Only', val: filterAuto, set: setFilterAuto },
         ].map(({ label, val, set }) => (
-          <label key={label} className="flex items-center gap-2.5 cursor-pointer select-none text-xs font-semibold text-slate-700 dark:text-slate-200">
+          <label key={label} className="flex items-center gap-2.5 cursor-pointer select-none text-xs font-semibold text-slate-700">
             <input
               type="checkbox"
               checked={val}
               onChange={e => set(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 accent-primary cursor-pointer"
+              className="w-4 h-4 rounded border-slate-300 accent-primary cursor-pointer"
             />
             {label}
           </label>
@@ -112,11 +112,11 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
 
       {/* Region */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Region</label>
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Region</label>
         <select
           value={filterRegion}
           onChange={e => setFilterRegion(e.target.value)}
-          className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
+          className="w-full bg-slate-50 border border-slate-200 text-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
         >
           {uniqueRegions.map(r => <option key={r} value={r}>{r === 'All' ? 'All Regions' : r}</option>)}
         </select>
@@ -124,11 +124,11 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
 
       {/* Chance Status */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Chance Status</label>
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Chance Status</label>
         <select
           value={chanceFilter}
           onChange={e => setChanceFilter(e.target.value)}
-          className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
+          className="w-full bg-slate-50 border border-slate-200 text-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-primary"
         >
           <option value="All">All Chances</option>
           <option value="Safe">Safe</option>
@@ -142,7 +142,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       {/* Min Probability Slider */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Min Probability</label>
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Min Probability</label>
           <span className="text-xs font-bold text-primary">{minProbability}%</span>
         </div>
         <input
@@ -161,7 +161,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       {(filterGovt || filterAuto || filterRegion !== 'All' || chanceFilter !== 'All' || minProbability > 0) && (
         <button
           onClick={() => { setFilterGovt(false); setFilterAuto(false); setFilterRegion('All'); setChanceFilter('All'); setMinProbability(0); }}
-          className="w-full text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 border border-slate-200 dark:border-slate-700 hover:border-red-300 dark:hover:border-red-800 py-2 rounded-lg transition-colors cursor-pointer"
+          className="w-full text-xs font-bold text-slate-500 hover:text-red-500 border border-slate-200 hover:border-red-300 py-2 rounded-lg transition-colors cursor-pointer"
         >
           Reset Filters
         </button>
@@ -177,16 +177,16 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors cursor-pointer shrink-0"
+            className="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-500 transition-colors cursor-pointer shrink-0"
             aria-label="Back"
           >
             <ArrowLeft className="w-4.5 h-4.5" />
           </button>
           <div>
-            <h2 className="font-display font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white">
+            <h2 className="font-display font-extrabold text-lg sm:text-xl text-slate-900">
               Prediction Results
             </h2>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            <p className="text-[11px] text-slate-500 font-medium mt-0.5">
               {profile.name} &bull; {profile.percentage}% &bull; {profile.category}
             </p>
           </div>
@@ -203,18 +203,18 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       {/* ── Stats Row ────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
-          { icon: <Building className="w-5 h-5" />, label: 'Matched', value: stats.totalMatched, color: 'text-blue-500', bg: 'bg-blue-500/10 dark:bg-blue-500/15' },
-          { icon: <Gauge className="w-5 h-5" />, label: 'Top Chance', value: `${stats.highestProbability}%`, color: 'text-violet-500', bg: 'bg-violet-500/10 dark:bg-violet-500/15' },
-          { icon: <GraduationCap className="w-5 h-5" />, label: 'Govt. Colleges', value: stats.governmentCount, color: 'text-emerald-500', bg: 'bg-emerald-500/10 dark:bg-emerald-500/15' },
-          { icon: <CheckCircle className="w-5 h-5" />, label: 'Autonomous', value: stats.autonomousCount, color: 'text-amber-500', bg: 'bg-amber-500/10 dark:bg-amber-500/15' },
+          { icon: <Building className="w-5 h-5" />, label: 'Matched', value: stats.totalMatched, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { icon: <Gauge className="w-5 h-5" />, label: 'Top Chance', value: `${stats.highestProbability}%`, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+          { icon: <GraduationCap className="w-5 h-5" />, label: 'Govt. Colleges', value: stats.governmentCount, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { icon: <CheckCircle className="w-5 h-5" />, label: 'Autonomous', value: stats.autonomousCount, color: 'text-amber-500', bg: 'bg-amber-500/10' },
         ].map(s => (
-          <div key={s.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-3">
+          <div key={s.label} className="bg-white border border-slate-200 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl ${s.bg} flex items-center justify-center ${s.color} shrink-0`}>
               {s.icon}
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">{s.label}</span>
-              <span className="font-display font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white leading-none mt-0.5 block">{s.value}</span>
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">{s.label}</span>
+              <span className="font-display font-extrabold text-lg sm:text-xl text-slate-900 leading-none mt-0.5 block">{s.value}</span>
             </div>
           </div>
         ))}
@@ -270,8 +270,8 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
         {/* Filters Sidebar — Desktop */}
-        <aside className="hidden lg:flex lg:col-span-3 flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm">
-          <div className="flex items-center gap-2 font-display font-extrabold text-sm text-slate-900 dark:text-white pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
+        <aside className="hidden lg:flex lg:col-span-3 flex-col bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <div className="flex items-center gap-2 font-display font-extrabold text-sm text-slate-900 pb-4 mb-5 border-b border-slate-100">
             <Filter className="w-4 h-4 text-primary" />
             <span>Filters</span>
           </div>
@@ -279,15 +279,15 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
         </aside>
 
         {/* Mobile Filter Toggle */}
-        <div className="lg:hidden flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5 rounded-xl shadow-sm">
+        <div className="lg:hidden flex items-center justify-between bg-white border border-slate-200 p-3.5 rounded-xl shadow-sm">
           <button
             onClick={() => setShowFiltersMobile(true)}
-            className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer"
+            className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer"
           >
             <SlidersHorizontal className="w-4 h-4 text-primary" />
             <span>Filters &amp; Sort</span>
           </button>
-          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+          <span className="text-[11px] font-semibold text-slate-500">
             {processedResults.length} results
           </span>
         </div>
@@ -296,17 +296,17 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
         {showFiltersMobile && (
           <div className="lg:hidden fixed inset-0 z-50 flex">
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowFiltersMobile(false)} />
-            <div className="relative ml-auto w-72 sm:w-80 max-w-full bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col overflow-y-auto">
-              <div className="sticky top-0 bg-white dark:bg-slate-900 flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 z-10">
-                <span className="font-display font-extrabold text-sm text-slate-900 dark:text-white">Filters &amp; Sort</span>
-                <button onClick={() => setShowFiltersMobile(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+            <div className="relative ml-auto w-72 sm:w-80 max-w-full bg-white h-full shadow-2xl flex flex-col overflow-y-auto">
+              <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-slate-100 z-10">
+                <span className="font-display font-extrabold text-sm text-slate-900">Filters &amp; Sort</span>
+                <button onClick={() => setShowFiltersMobile(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="p-5 flex-1">
                 <FiltersContent />
               </div>
-              <div className="sticky bottom-0 bg-white dark:bg-slate-900 p-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="sticky bottom-0 bg-white p-4 border-t border-slate-100">
                 <button onClick={() => setShowFiltersMobile(false)} className="btn-primary w-full justify-center py-3 text-sm">
                   Apply Filters
                 </button>
@@ -319,14 +319,14 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
         <div className="lg:col-span-9 space-y-5">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+              <h3 className="font-display font-extrabold text-sm sm:text-base text-slate-900">
                 Top College Recommendations
               </h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              <p className="text-[11px] text-slate-500 font-medium mt-0.5">
                 Ordered by your selected preferences.
               </p>
             </div>
-            <span className="hidden sm:inline-flex text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg select-none">
+            <span className="hidden sm:inline-flex text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg select-none">
               {processedResults.length} options
             </span>
           </div>
@@ -339,20 +339,20 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
               return (
                 <div
                   key={item.college.choiceCode}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col gap-4 text-left relative"
+                  className="bg-white border border-slate-200 p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col gap-4 text-left relative"
                 >
                   {/* Rank badge */}
-                  <div className="absolute top-4 left-4 w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 font-display font-extrabold text-[10px] flex items-center justify-center text-slate-500 dark:text-slate-400">
+                  <div className="absolute top-4 left-4 w-6 h-6 rounded-full bg-slate-100 font-display font-extrabold text-[10px] flex items-center justify-center text-slate-500">
                     {index + 1}
                   </div>
 
                   {/* Header */}
                   <div className="flex justify-between items-start pl-8">
                     <div className="space-y-0.5">
-                      <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase block">
+                      <span className="text-[9px] font-bold text-slate-400 tracking-widest uppercase block">
                         Code · {item.college.choiceCode}
                       </span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase block">
+                      <span className="text-[10px] text-slate-500 font-semibold uppercase block">
                         {item.college.region}
                       </span>
                     </div>
@@ -369,40 +369,40 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
 
                   {/* Body */}
                   <div className="space-y-3">
-                    <h4 className="font-display font-extrabold text-[13px] sm:text-[14px] text-slate-900 dark:text-white leading-snug">
+                    <h4 className="font-display font-extrabold text-[13px] sm:text-[14px] text-slate-900 leading-snug">
                       {item.college.collegeName}
                     </h4>
 
                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px]">
                       <div>
-                        <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">Branch</span>
-                        <span className="font-bold text-slate-800 dark:text-slate-100 leading-snug line-clamp-2" title={item.college.branch}>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Branch</span>
+                        <span className="font-bold text-slate-800 leading-snug line-clamp-2" title={item.college.branch}>
                           {item.college.branch}
                         </span>
                       </div>
                       <div>
-                        <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">Type</span>
-                        <span className="font-bold text-slate-800 dark:text-slate-100">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Type</span>
+                        <span className="font-bold text-slate-800">
                           {item.college.type}
-                          {item.college.autonomous && <span className="ml-1 text-[8px] font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded">AUTO</span>}
+                          {item.college.autonomous && <span className="ml-1 text-[8px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">AUTO</span>}
                         </span>
                       </div>
                     </div>
 
                     {/* Cutoff row */}
-                    <div className="grid grid-cols-3 gap-2 text-[10.5px] font-bold border-t border-slate-100 dark:border-slate-800 pt-3">
+                    <div className="grid grid-cols-3 gap-2 text-[10.5px] font-bold border-t border-slate-100 pt-3">
                       <div>
-                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium block uppercase mb-0.5">Prev Cutoff</span>
-                        <span className="text-slate-800 dark:text-slate-100">{item.cutoffPercent}%</span>
-                        <span className="text-[8px] text-slate-400 dark:text-slate-500 ml-1">({item.matchedCutoffCategory})</span>
+                        <span className="text-[9px] text-slate-400 font-medium block uppercase mb-0.5">Prev Cutoff</span>
+                        <span className="text-slate-800">{item.cutoffPercent}%</span>
+                        <span className="text-[8px] text-slate-400 ml-1">({item.matchedCutoffCategory})</span>
                       </div>
                       <div className="text-center">
-                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium block uppercase mb-0.5">Your Score</span>
-                        <span className="text-slate-900 dark:text-white">{profile.percentage}%</span>
+                        <span className="text-[9px] text-slate-400 font-medium block uppercase mb-0.5">Your Score</span>
+                        <span className="text-slate-900">{profile.percentage}%</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium block uppercase mb-0.5">Gap</span>
-                        <span className={item.difference >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}>
+                        <span className="text-[9px] text-slate-400 font-medium block uppercase mb-0.5">Gap</span>
+                        <span className={item.difference >= 0 ? 'text-emerald-600' : 'text-red-500'}>
                           {item.difference >= 0 ? '+' : ''}{item.difference}%
                         </span>
                       </div>
@@ -410,18 +410,18 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3">
+                  <div className="flex items-center justify-between border-t border-slate-100 pt-3">
                     <span className={`inline-flex px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border ${cs.bg} ${cs.border} ${cs.text}`}>
                       {item.chanceStatus}
                     </span>
                     <div className="flex items-center gap-2 shrink-0">
                       <div className="relative w-9 h-9 flex items-center justify-center">
                         <svg className="w-full h-full gauge-svg" viewBox="0 0 36 36">
-                          <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-100 dark:text-slate-800" />
+                          <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-100" />
                           <circle cx="18" cy="18" r="15" fill="none" stroke={cs.color} strokeWidth="2.5"
                             strokeDasharray="94.25" strokeDashoffset={94.25 - (item.probability / 100) * 94.25} />
                         </svg>
-                        <span className="absolute font-display font-extrabold text-[9px] text-slate-800 dark:text-slate-100">{item.probability}%</span>
+                        <span className="absolute font-display font-extrabold text-[9px] text-slate-800">{item.probability}%</span>
                       </div>
                       <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider hidden sm:block">Chance</span>
                     </div>
@@ -431,12 +431,12 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
             })}
 
             {processedResults.length === 0 && (
-              <div className="col-span-1 md:col-span-2 bg-slate-50 dark:bg-slate-800/20 border border-slate-200 dark:border-slate-800 p-10 rounded-2xl text-center flex flex-col items-center justify-center min-h-[200px]">
-                <HelpCircle className="w-10 h-10 text-slate-300 dark:text-slate-700 mb-3" />
-                <h3 className="font-display font-extrabold text-sm text-slate-700 dark:text-slate-300">
+              <div className="col-span-1 md:col-span-2 bg-slate-50 border border-slate-200 p-10 rounded-2xl text-center flex flex-col items-center justify-center min-h-[200px]">
+                <HelpCircle className="w-10 h-10 text-slate-300 mb-3" />
+                <h3 className="font-display font-extrabold text-sm text-slate-700">
                   No results match the current filters.
                 </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1 max-w-sm">
+                <p className="text-[11px] text-slate-500 font-medium mt-1 max-w-sm">
                   Try reducing the min probability, removing management filters, or selecting a different region.
                 </p>
               </div>
@@ -456,12 +456,12 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
 
       {/* ── PDF Banner ───────────────────────────────────── */}
       {processedResults.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1">
-            <h4 className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+            <h4 className="font-display font-extrabold text-sm sm:text-base text-slate-900">
               Download Your Personalised CAP Strategy Report
             </h4>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-[11px] text-slate-500 font-medium">
               Includes top 10 colleges, CAP form order, comparison matrix and offline worksheets.
             </p>
           </div>
@@ -473,7 +473,7 @@ export default function ResultsDashboard({ results, profile, onBack }: ResultsDa
       )}
 
       {/* Disclaimer */}
-      <p className="text-[10px] text-slate-400 dark:text-slate-500 italic leading-relaxed pb-2">
+      <p className="text-[10px] text-slate-400 italic leading-relaxed pb-2">
         * Predictions are based on CAP Round I cutoffs from 2024‑25. Actual cutoffs for 2025‑26 may vary. Use this tool for advisory purposes only.
       </p>
     </div>

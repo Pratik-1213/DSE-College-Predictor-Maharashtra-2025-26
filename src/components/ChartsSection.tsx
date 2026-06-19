@@ -56,8 +56,8 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
       {/* ── Card 1: Donut ──────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
-        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
+      <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900">
           Probability Distribution
         </h3>
 
@@ -65,7 +65,7 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
           {/* Donut */}
           <div className="relative w-28 h-28 shrink-0">
             <svg className="w-full h-full gauge-svg" viewBox="0 0 112 112">
-              <circle cx="56" cy="56" r={radius} fill="none" stroke="currentColor" strokeWidth="11" className="text-slate-100 dark:text-slate-800" />
+              <circle cx="56" cy="56" r={radius} fill="none" stroke="currentColor" strokeWidth="11" className="text-slate-100" />
               {counts.map((seg, i) => {
                 const dash = (seg.count / total) * circ;
                 const offset = circ - (cumulative / total) * circ;
@@ -81,7 +81,7 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
               })}
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="font-display font-extrabold text-lg text-slate-800 dark:text-slate-100">{results.length}</span>
+              <span className="font-display font-extrabold text-lg text-slate-800">{results.length}</span>
               <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total</span>
             </div>
           </div>
@@ -92,9 +92,9 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
               <div key={i} className="flex items-center justify-between gap-2 text-[11px] font-semibold">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
-                  <span className="text-slate-700 dark:text-slate-300 truncate">{seg.label}</span>
+                  <span className="text-slate-700 truncate">{seg.label}</span>
                 </div>
-                <span className="text-slate-500 dark:text-slate-400 shrink-0">{seg.count}</span>
+                <span className="text-slate-500 shrink-0">{seg.count}</span>
               </div>
             ))}
             {counts.length === 0 && <p className="text-[11px] text-slate-400 italic">No data</p>}
@@ -103,18 +103,18 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
       </div>
 
       {/* ── Card 2: Regions ────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
-        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
+      <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900">
           Region‑Wise Opportunities
         </h3>
         <div className="flex flex-col gap-3">
           {topRegions.map((r, i) => (
             <div key={i} className="space-y-1">
               <div className="flex justify-between text-[11px] font-semibold">
-                <span className="text-slate-700 dark:text-slate-300 truncate max-w-[65%]">{r.name}</span>
+                <span className="text-slate-700 truncate max-w-[65%]">{r.name}</span>
                 <span className="text-primary font-bold">{r.count}</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500"
                   style={{ width: `${Math.max(6, Math.round((r.count / maxRegion) * 100))}%` }}
@@ -127,18 +127,18 @@ export default function ChartsSection({ results }: ChartsSectionProps) {
       </div>
 
       {/* ── Card 3: Branches ───────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
-        <h3 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">
+      <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm flex flex-col gap-4">
+        <h3 className="font-display font-extrabold text-sm text-slate-900">
           Branch‑Wise Opportunities
         </h3>
         <div className="flex flex-col gap-3">
           {topBranches.map((b, i) => (
             <div key={i} className="space-y-1">
               <div className="flex justify-between text-[11px] font-semibold">
-                <span className="text-slate-700 dark:text-slate-300 truncate max-w-[65%]">{b.name}</span>
+                <span className="text-slate-700 truncate max-w-[65%]">{b.name}</span>
                 <span className="text-secondary font-bold">{b.count}</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500 transition-all duration-500"
                   style={{ width: `${Math.max(6, Math.round((b.count / maxBranch) * 100))}%` }}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import PredictionForm from './components/PredictionForm';
@@ -17,36 +17,9 @@ const cutoffDataset = cutoffDataRaw as CollegeRecord[];
 
 export default function App() {
   const [view, setView] = useState<'landing' | 'predict' | 'loading' | 'results' | 'search'>('landing');
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') return true;
-    if (saved === 'light') return false;
-    // No saved preference — default to LIGHT mode
-    return false;
-  });
 
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [predictionResults, setPredictionResults] = useState<PredictionResult[]>([]);
-
-  // Synchronize dark class on <html> and persist preference
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
-
-  // One-time: if no theme was ever saved, ensure light is written so
-  // the inline script in index.html finds 'light' on next load.
-  useEffect(() => {
-    if (!localStorage.getItem('theme')) {
-      localStorage.setItem('theme', 'light');
-    }
-  }, []);
 
   // Handle form submission
   const handleFormSubmit = (profile: StudentProfile) => {
@@ -77,11 +50,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900">
       {/* Navigation Header */}
       <Header
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
         onNavigate={handleNavigate}
         activeView={view === 'loading' ? 'predict' : view}
         hasResults={predictionResults.length > 0}
@@ -97,7 +68,7 @@ export default function App() {
         )}
 
         {view === 'predict' && (
-          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen">
+          <div className="w-full bg-[#F8FAFC] min-h-screen">
             <PredictionForm
               onSubmit={handleFormSubmit}
               onBackToHome={() => setView('landing')}
@@ -106,13 +77,13 @@ export default function App() {
         )}
 
         {view === 'loading' && (
-          <div className="w-full flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen px-4">
+          <div className="w-full flex items-center justify-center bg-[#F8FAFC] min-h-screen px-4">
             <LoadingScreen onComplete={handleLoadingComplete} />
           </div>
         )}
 
         {view === 'results' && studentProfile && (
-          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19]">
+          <div className="w-full bg-[#F8FAFC]">
             <ResultsDashboard
               results={predictionResults}
               profile={studentProfile}
@@ -122,7 +93,7 @@ export default function App() {
         )}
 
         {view === 'search' && (
-          <div className="w-full bg-[#F8FAFC] dark:bg-[#0B0F19] min-h-screen">
+          <div className="w-full bg-[#F8FAFC] min-h-screen">
             <CollegeSearch
               dataset={cutoffDataset}
               onBack={() => setView('landing')}
@@ -132,7 +103,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-slate-950 dark:bg-black/40 border-t border-slate-800 dark:border-slate-900 text-slate-400 py-7 px-4 sm:px-6 lg:px-8 font-sans text-xs">
+      <footer className="w-full bg-slate-950 border-t border-slate-800 text-slate-400 py-7 px-4 sm:px-6 lg:px-8 font-sans text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="font-display font-extrabold text-sm text-white tracking-wide block">DSE College Predictor Maharashtra</span>
