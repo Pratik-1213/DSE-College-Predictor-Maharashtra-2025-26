@@ -108646,5 +108646,117 @@
     "choiceCode": "1612629310",
     "university": "",
     "district": "Pune"
+  },
+  {
+    "collegeName": "MKSSS's Cummins College of Engineering for Women, Karvenagar, Pune",
+    "code": "6276",
+    "region": "Pune",
+    "type": "Un-Aided",
+    "branch": "Computer Engineering",
+    "cutoffs": {
+      "GOPEN": { "rank": null, "percentile": null },
+      "LOPEN": { "rank": 131, "percentile": 96.06 },
+      "LSC":   { "rank": 906, "percentile": 93.40 },
+      "LST":   { "rank": 20017, "percentile": 80.53 },
+      "LNTB":  { "rank": 398, "percentile": 94.82 },
+      "LNTC":  { "rank": 150, "percentile": 95.94 },
+      "LOBC":  { "rank": 225, "percentile": 95.49 },
+      "LSEBC": { "rank": 163, "percentile": 95.88 },
+      "EWS":   { "rank": 317, "percentile": 95.12 }
+    },
+    "autonomous": true,
+    "location": "Karvenagar, Pune",
+    "choiceCode": "627624550F",
+    "university": "",
+    "district": "Pune"
+  },
+  {
+    "collegeName": "MKSSS's Cummins College of Engineering for Women, Karvenagar, Pune",
+    "code": "6276",
+    "region": "Pune",
+    "type": "Un-Aided",
+    "branch": "Information Technology",
+    "cutoffs": {
+      "GOPEN": { "rank": null, "percentile": null },
+      "LOPEN": { "rank": 226, "percentile": 95.47 },
+      "LSC":   { "rank": 1276, "percentile": 92.75 },
+      "LST":   { "rank": 25009, "percentile": 78.35 },
+      "LNTB":  { "rank": 554, "percentile": 94.29 },
+      "LNTD":  { "rank": 701, "percentile": 93.89 },
+      "LOBC":  { "rank": 272, "percentile": 95.26 },
+      "LSEBC": { "rank": 231, "percentile": 95.47 },
+      "EWS":   { "rank": 368, "percentile": 94.91 }
+    },
+    "autonomous": true,
+    "location": "Karvenagar, Pune",
+    "choiceCode": "627624650F",
+    "university": "",
+    "district": "Pune"
+  },
+  {
+    "collegeName": "MKSSS's Cummins College of Engineering for Women, Karvenagar, Pune",
+    "code": "6276",
+    "region": "Pune",
+    "type": "Un-Aided",
+    "branch": "Electronics and Telecommunication Engg",
+    "cutoffs": {
+      "GOPEN": { "rank": null, "percentile": null },
+      "LOPEN": { "rank": 715, "percentile": 93.87 },
+      "LSC":   { "rank": 4179, "percentile": 89.47 },
+      "LNTB":  { "rank": 1524, "percentile": 92.35 },
+      "LNTC":  { "rank": 3126, "percentile": 90.39 },
+      "LNTD":  { "rank": 5152, "percentile": 88.72 },
+      "LOBC":  { "rank": 943, "percentile": 93.31 },
+      "LSEBC": { "rank": 903, "percentile": 93.41 },
+      "EWS":   { "rank": 1908, "percentile": 91.82 }
+    },
+    "autonomous": true,
+    "location": "Karvenagar, Pune",
+    "choiceCode": "627637250F",
+    "university": "",
+    "district": "Pune"
+  },
+  {
+    "collegeName": "MKSSS's Cummins College of Engineering for Women, Karvenagar, Pune",
+    "code": "6276",
+    "region": "Pune",
+    "type": "Un-Aided",
+    "branch": "Instrumentation and Control Engineering",
+    "cutoffs": {
+      "GOPEN": { "rank": null, "percentile": null },
+      "LOPEN": { "rank": 3418, "percentile": 90.12 },
+      "LSC":   { "rank": 4540, "percentile": 89.18 },
+      "LNTB":  { "rank": 31700, "percentile": 75.50 },
+      "LNTD":  { "rank": 19920, "percentile": 80.57 },
+      "LOBC":  { "rank": 4927, "percentile": 88.88 },
+      "LSEBC": { "rank": 3819, "percentile": 89.77 },
+      "EWS":   { "rank": 4850, "percentile": 88.94 }
+    },
+    "autonomous": true,
+    "location": "Karvenagar, Pune",
+    "choiceCode": "627646450F",
+    "university": "",
+    "district": "Pune"
+  },
+  {
+    "collegeName": "MKSSS's Cummins College of Engineering for Women, Karvenagar, Pune",
+    "code": "6276",
+    "region": "Pune",
+    "type": "Un-Aided",
+    "branch": "Mechanical Engineering",
+    "cutoffs": {
+      "GOPEN": { "rank": null, "percentile": null },
+      "LOPEN": { "rank": 2416, "percentile": 91.19 },
+      "LSC":   { "rank": 19880, "percentile": 80.58 },
+      "LST":   { "rank": 18572, "percentile": 81.20 },
+      "LOBC":  { "rank": 3919, "percentile": 89.70 },
+      "LSEBC": { "rank": 3811, "percentile": 89.79 },
+      "EWS":   { "rank": 14964, "percentile": 82.92 }
+    },
+    "autonomous": true,
+    "location": "Karvenagar, Pune",
+    "choiceCode": "627661250F",
+    "university": "",
+    "district": "Pune"
   }
 ]
