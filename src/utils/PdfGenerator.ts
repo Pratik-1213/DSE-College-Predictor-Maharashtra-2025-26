@@ -355,6 +355,7 @@ export function generatePdfReport(
   doc.setFont('Helvetica', 'normal');
   doc.setTextColor(37, 99, 235);
   doc.text('pratik.1213.coep@gmail.com', ml + 14, row1Y);
+  doc.link(ml + 14, row1Y - 3, 52, 4, { url: 'mailto:pratik.1213.coep@gmail.com' });
 
   doc.setFillColor(71, 85, 105);
   doc.circle(ml + 95, row1Y - 1, 0.9, 'F');
@@ -368,11 +369,13 @@ export function generatePdfReport(
   doc.circle(ml + 11, row2Y - 1, 0.9, 'F');
   doc.setTextColor(10, 102, 194);
   doc.text('linkedin.com/in/pratik-kumbhar-1213praa29b', ml + 14, row2Y);
+  doc.link(ml + 14, row2Y - 3, 78, 4, { url: 'https://www.linkedin.com/in/pratik-kumbhar-1213praa29b/' });
 
   doc.setFillColor(36, 41, 47);
   doc.circle(ml + 95, row2Y - 1, 0.9, 'F');
   doc.setTextColor(36, 41, 47);
   doc.text('github.com/Pratik-1213', ml + 98, row2Y);
+  doc.link(ml + 98, row2Y - 3, 38, 4, { url: 'https://github.com/Pratik-1213' });
 
   // ── Footer on every page ──────────────────────────────────────────────────
   const totalPages: number = (doc.internal as any).pages.length - 1;
