@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import {
   CheckCircle, ArrowLeft, Filter, SlidersHorizontal, Download, X,
-  HelpCircle, Sparkles, Building, MapPin, Gauge, GraduationCap, Bookmark, BookmarkCheck, FileText
+  HelpCircle, Sparkles, Building, MapPin, Gauge, GraduationCap, Bookmark, BookmarkCheck, FileText,
+  AlertTriangle, ChevronRight
 } from 'lucide-react';
 import { PredictionResult, StudentProfile, DashboardStats } from '../types';
 import { getDashboardStats, generateCapStrategy } from '../utils/predictionEngine';
@@ -39,6 +40,7 @@ export default function ResultsDashboard({ results, profile, shortlist, onToggle
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
   const [compareList, setCompareList] = useState<PredictionResult[]>([]);
   const [showShortlist, setShowShortlist] = useState(false);
+  const [dismissedTip, setDismissedTip] = useState(false);
 
   const uniqueRegions = useMemo(() => {
     const s = new Set<string>();
@@ -84,6 +86,15 @@ export default function ResultsDashboard({ results, profile, shortlist, onToggle
 
   const stats: DashboardStats = useMemo(() => getDashboardStats(processedResults), [processedResults]);
   const strategyColleges = useMemo(() => generateCapStrategy(processedResults), [processedResults]);
+
+  // Show filter tip when most visible results are Dream/Low and no chance filter is active
+  const isDreamHeavy = useMemo(() => {
+    if (chanceFilter !== 'All') return false; // already filtered
+    const top = processedResults.slice(0, 10);
+    if (top.length < 3) return false;
+    const hardCount = top.filter(r => r.chanceStatus === 'Dream' || r.chanceStatus === 'Low Chance').length;
+    return hardCount / top.length >= 0.6;
+  }, [processedResults, chanceFilter]);
 
   const handleDownloadPdf = () => generatePdfReport(profile, processedResults, strategyColleges, compareList);
 
@@ -288,6 +299,52 @@ export default function ResultsDashboard({ results, profile, shortlist, onToggle
           </div>
         ))}
       </div>
+
+      {/* ── Dream-Heavy Filter Tip ───────────────────────── */}
+      {isDreamHeavy && !dismissedTip && (
+        <div className="w-full bg-amber-50 border border-amber-300 rounded-2xl p-4 sm:p-5 flex gap-4 items-start">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+            <AlertTriangle className="w-5 h-5 text-amber-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-display font-extrabold text-sm text-amber-900">
+              Most results are Dream or Low Chance for your score
+            </p>
+            <p className="text-[12px] text-amber-700 font-medium mt-1 leading-relaxed">
+              Don't worry — there are colleges where you have a strong chance. Try adjusting the filters to find them:
+            </p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              <button
+                onClick={() => { setChanceFilter('Safe'); setDismissedTip(true); }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-3 h-3" /> Show Safe colleges
+              </button>
+              <button
+                onClick={() => { setChanceFilter('High Chance'); setDismissedTip(true); }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-3 h-3" /> Show High Chance
+              </button>
+              <button
+                onClick={() => { setChanceFilter('Moderate Chance'); setDismissedTip(true); }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-3 h-3" /> Show Moderate Chance
+              </button>
+            </div>
+            <p className="text-[11px] text-amber-600 font-medium mt-2">
+              💡 Tip: Try selecting <strong>Entire Maharashtra</strong> as region in the prediction form to see more options.
+            </p>
+          </div>
+          <button
+            onClick={() => setDismissedTip(true)}
+            className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-amber-400 hover:text-amber-700 hover:bg-amber-100 transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* ── Best Recommended Banner ──────────────────────── */}
       {stats.bestRecommended && (
