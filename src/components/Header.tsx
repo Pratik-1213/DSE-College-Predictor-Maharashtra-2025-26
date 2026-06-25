@@ -50,7 +50,7 @@ export default function Header({ onNavigate, activeView, hasResults }: HeaderPro
                 DSE Predictor
               </p>
               <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium hidden xs:block">
-                Maharashtra 2025‑26
+                Maharashtra 2026‑27
               </p>
             </div>
           </button>

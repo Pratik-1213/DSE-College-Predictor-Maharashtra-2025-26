@@ -159,7 +159,7 @@ export default function App() {
           {/* Disclaimer */}
           <div className="text-[11px] font-medium text-slate-600 max-w-xs space-y-1">
             <p className="text-slate-500 font-semibold">Disclaimer</p>
-            <p>Results are advisory only. Actual 2025-26 cutoffs may vary. Always verify with the official CET Cell handbook before submitting your CAP option form.</p>
+            <p>Results are advisory only. Actual 2026-27 cutoffs may vary. Always verify with the official CET Cell handbook before submitting your CAP option form.</p>
           </div>
 
         </div>

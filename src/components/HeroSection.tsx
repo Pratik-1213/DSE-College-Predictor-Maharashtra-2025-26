@@ -10,7 +10,7 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
   const stats = [
     { value: '682+', label: 'Engineering Colleges', desc: 'Across Maharashtra' },
     { value: '90+', label: 'Branches / Courses', desc: 'Direct Second Year' },
-    { value: '2,010', label: 'CAP Cutoff Records', desc: 'AY 2024‑25 Data' },
+    { value: '2,010', label: 'CAP Cutoff Records', desc: 'AY 2025‑26 Data' },
     { value: '100%', label: 'Free & Accurate', desc: 'No Login Required' }
   ];
 
@@ -64,7 +64,7 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-full w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
               <span className="text-blue-200 font-semibold text-[11px] sm:text-xs tracking-widest uppercase">
-                Direct Second Year Engineering · Maharashtra 2025‑26
+                Direct Second Year Engineering · Maharashtra 2026‑27
               </span>
             </div>
 
@@ -72,7 +72,7 @@ export default function HeroSection({ onStartPredicting, onSearchColleges }: Her
               DSE College Predictor
               <br />
               <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-violet-400 bg-clip-text text-transparent">
-                Maharashtra 2025‑26
+                Maharashtra 2026‑27
               </span>
             </h2>
 

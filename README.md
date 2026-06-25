@@ -1,4 +1,4 @@
-# DSE College Predictor Maharashtra 2025-26
+# DSE College Predictor Maharashtra 2026-27
 
 [![React](https://img.shields.io/badge/React-19-blue.svg?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
@@ -6,7 +6,7 @@
 [![Vite](https://img.shields.io/badge/Vite-8.0-646CFF.svg?logo=vite)](https://vite.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A free, fully client-side web tool for Diploma Engineering students appearing in **Direct Second Year (DSE)** admissions in Maharashtra. Enter your score, category, and preferences — get ranked college recommendations, a ready-to-use CAP option form order, college cutoff explorer, and a downloadable PDF strategy report. All powered by official CAP Round I cutoff data from 2024-25. No login, no backend, no ads.
+A free, fully client-side web tool for Diploma Engineering students appearing in **Direct Second Year (DSE)** admissions in Maharashtra. Enter your score, category, and preferences — get ranked college recommendations, a ready-to-use CAP option form order, college cutoff explorer, and a downloadable PDF strategy report. All powered by official CAP Round I cutoff data from 2025-26. No login, no backend, no ads.
 
 ---
 
@@ -76,7 +76,7 @@ src/
 │   ├── predictionEngine.ts    # Matching + probability engine + CAP strategy
 │   └── PdfGenerator.ts        # PDF report layout
 ├── data/
-│   └── cutoff_data.json       # CAP Round I 2024-25 dataset (2,010 records)
+│   └── cutoff_data.json       # CAP Round I 2025-26 dataset (2,010 records)
 ├── types.ts                   # TypeScript interfaces
 ├── App.tsx                    # Root component + view routing
 └── index.css                  # CSS variables + Tailwind base
@@ -153,13 +153,13 @@ No environment variables required. The app is fully static — no server, no dat
 }
 ```
 
-Key format: `G` = General merit, `L` = Lady (female) seat, suffix = category code. Null entries mean no seat was filled in that category in 2024-25.
+Key format: `G` = General merit, `L` = Lady (female) seat, suffix = category code. Null entries mean no seat was filled in that category in 2025-26.
 
 ---
 
 ## Disclaimer
 
-Predictions are based on CAP Round I cutoffs from **2024-25**. Actual cutoffs for 2025-26 may vary. Use this tool for planning only — always verify with the official **Maharashtra State CET Cell** handbook.
+Predictions are based on CAP Round I cutoffs from **2025-26**. Actual cutoffs for 2026-27 may vary. Use this tool for planning only — always verify with the official **Maharashtra State CET Cell** handbook.
 
 ---
 

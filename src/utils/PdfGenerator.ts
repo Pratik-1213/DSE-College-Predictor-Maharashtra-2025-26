@@ -17,7 +17,7 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(255, 255, 255);
-  doc.text('MY COLLEGE SHORTLIST — DSE MAHARASHTRA 2025-26', ml, 12);
+  doc.text('MY COLLEGE SHORTLIST — DSE MAHARASHTRA 2026-27', ml, 12);
   doc.setFontSize(8.5);
   doc.setFont('Helvetica', 'normal');
   doc.text(`${profile.name}  ·  ${profile.percentage}%  ·  ${profile.category}  ·  Generated: ${new Date().toLocaleDateString('en-IN')}`, ml, 18.5);
@@ -152,7 +152,7 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
     doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
     doc.line(ml, fy - 4, pageWidth - mr, fy - 4);
     doc.setFont('Helvetica', 'italic'); doc.setFontSize(6); doc.setTextColor(148, 163, 184);
-    doc.text('Advisory only — actual 2025-26 cutoffs may vary. Verify with the official CET Cell handbook.', ml, fy - 1);
+    doc.text('Advisory only — actual 2026-27 cutoffs may vary. Verify with the official CET Cell handbook.', ml, fy - 1);
     doc.setFont('Helvetica', 'normal');
     doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy - 1, { align: 'right' });
     doc.setFontSize(5.5); doc.setTextColor(203, 213, 225);
@@ -219,7 +219,7 @@ export function generatePdfReport(
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(15);
   doc.setTextColor(255, 255, 255);
-  doc.text('DSE COLLEGE PREDICTOR MAHARASHTRA 2025-26', ml, 12);
+  doc.text('DSE COLLEGE PREDICTOR MAHARASHTRA 2026-27', ml, 12);
   doc.setFontSize(9);
   doc.setFont('Helvetica', 'normal');
   doc.text('Direct Second Year Engineering — Personalised Admission Report', ml, 18.5);
@@ -345,7 +345,7 @@ export function generatePdfReport(
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(255, 255, 255);
-  doc.text('DSE Admissions Maharashtra 2025-26 — CAP Option Form Strategy', ml, 7);
+  doc.text('DSE Admissions Maharashtra 2026-27 — CAP Option Form Strategy', ml, 7);
 
   y = 18;
 
@@ -552,7 +552,7 @@ export function generatePdfReport(
     doc.setFontSize(6);
     doc.setTextColor(148, 163, 184);
     doc.text(
-      'Advisory only — actual 2025-26 cutoffs may vary. Verify all choices with the official CET Cell handbook.',
+      'Advisory only — actual 2026-27 cutoffs may vary. Verify all choices with the official CET Cell handbook.',
       ml, fy - 1
     );
     doc.setFont('Helvetica', 'normal');

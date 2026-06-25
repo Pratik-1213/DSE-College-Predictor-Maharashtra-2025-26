@@ -613,7 +613,7 @@ export default function ResultsDashboard({ results, profile, shortlist, onToggle
 
       {/* Disclaimer */}
       <p className="text-[10px] text-slate-400 italic leading-relaxed pb-2">
-        * Predictions are based on CAP Round I cutoffs from 2024‑25. Actual cutoffs for 2025‑26 may vary. Use this tool for advisory purposes only.
+        * Predictions are based on CAP Round I cutoffs from 2025‑26. Actual cutoffs for 2026‑27 may vary. Use this tool for advisory purposes only.
       </p>
 
       {/* ── Shortlist Drawer ──────────────────────────────── */}
