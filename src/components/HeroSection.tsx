@@ -8,9 +8,9 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onStartPredicting, onSearchColleges }: HeroSectionProps) {
   const stats = [
-    { value: '682+', label: 'Engineering Colleges', desc: 'Across Maharashtra' },
+    { value: '346+', label: 'Engineering Colleges', desc: 'Across Maharashtra' },
     { value: '90+', label: 'Branches / Courses', desc: 'Direct Second Year' },
-    { value: '2,010', label: 'CAP Cutoff Records', desc: 'AY 2025‑26 Data' },
+    { value: '2,015', label: 'CAP Cutoff Records', desc: 'AY 2025‑26 Data' },
     { value: '100%', label: 'Free & Accurate', desc: 'No Login Required' }
   ];
 
