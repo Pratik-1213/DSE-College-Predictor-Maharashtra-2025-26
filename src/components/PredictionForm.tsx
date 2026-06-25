@@ -29,7 +29,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
     { num: 5, label: 'College Preference', desc: 'Select college type criteria' }
   ];
 
-  const categoriesList = ['OPEN', 'OBC', 'SEBC', 'EWS', 'SC', 'ST', 'NT-A', 'NT-B', 'NT-C', 'NT-D', 'TFWS'];
+  const categoriesList = ['OPEN', 'OBC', 'SEBC', 'EWS', 'SC', 'ST', 'NT-A', 'NT-B', 'NT-C', 'NT-D', 'TFWS', 'PWD', 'DEFR'];
   const regionsList = ['Pune', 'Mumbai', 'Nashik', 'Nagpur', 'Amravati', 'Aurangabad', 'Konkan', 'Entire Maharashtra'];
   
   const branchGroups = [
@@ -50,6 +50,12 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
       title: 'Mechanical Group',
       desc: 'Mechanical Engineering, Production Engineering, Manufacturing Engineering',
       branches: ['Mechanical', 'Production', 'Manufacturing']
+    },
+    {
+      id: 'Civil Group',
+      title: 'Civil Group',
+      desc: 'Civil Engineering, Civil & Infrastructure Engineering, Construction Engineering, Environmental Engineering, Transportation Engineering',
+      branches: ['Civil', 'Construction', 'Environmental', 'Transportation']
     }
   ];
 
@@ -353,7 +359,7 @@ export default function PredictionForm({ onSubmit, onBackToHome }: PredictionFor
                       )}
                     </div>
                     <span className="text-[10px] text-text-muted mt-2 font-semibold">
-                      {cat === 'OPEN' ? 'General Merit' : cat === 'TFWS' ? 'Merit Fee Waiver' : cat === 'SEBC' ? 'Socially & Educationally BC' : cat === 'EWS' ? 'Economically Weaker Section' : `${cat} Category`}
+                      {cat === 'OPEN' ? 'General Merit' : cat === 'TFWS' ? 'Merit Fee Waiver' : cat === 'SEBC' ? 'Socially & Educationally BC' : cat === 'EWS' ? 'Economically Weaker Section' : cat === 'PWD' ? 'Persons with Disability' : cat === 'DEFR' ? 'Defence / Ex-Servicemen' : `${cat} Category`}
                     </span>
                   </button>
                 ))}

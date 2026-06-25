@@ -7,7 +7,13 @@ interface CollegeSearchProps {
   onBack: () => void;
 }
 
-const ALL_CATEGORIES = ['GOPEN', 'GOBC', 'GSEBC', 'GEWS', 'GSC', 'GST', 'GNTA', 'GNTB', 'GNTC', 'GNTD', 'LOPEN', 'LOBC', 'LSEBC', 'LSC', 'LST', 'TFWS', 'EWS'];
+const ALL_CATEGORIES = [
+  'GOPEN', 'GOBC', 'GSEBC', 'GEWS', 'GSC', 'GST', 'GNTA', 'GNTB', 'GNTC', 'GNTD',
+  'LOPEN', 'LOBC', 'LSEBC', 'LSC', 'LST',
+  'TFWS', 'EWS',
+  'PWDOPEN', 'PWDOBC', 'PWDSC', 'PWDST',
+  'DEFROPEN', 'DEFROBC',
+];
 
 const CAT_LABELS: Record<string, string> = {
   GOPEN: 'Open (M)', GOBC: 'OBC (M)', GSEBC: 'SEBC (M)', GEWS: 'EWS (M)',
@@ -15,6 +21,8 @@ const CAT_LABELS: Record<string, string> = {
   GNTC: 'NT-C (M)', GNTD: 'NT-D (M)',
   LOPEN: 'Open (F)', LOBC: 'OBC (F)', LSEBC: 'SEBC (F)', LSC: 'SC (F)', LST: 'ST (F)',
   TFWS: 'TFWS', EWS: 'EWS',
+  PWDOPEN: 'PWD-Open', PWDOBC: 'PWD-OBC', PWDSC: 'PWD-SC', PWDST: 'PWD-ST',
+  DEFROPEN: 'DEFR-Open', DEFROBC: 'DEFR-OBC',
 };
 
 const REGIONS = ['Pune', 'Mumbai', 'Nashik', 'Nagpur', 'Amravati', 'Aurangabad', 'Konkan'];

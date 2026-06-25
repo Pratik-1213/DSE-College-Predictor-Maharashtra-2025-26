@@ -26,6 +26,12 @@ export function getStudentCutoffForCourse(
     keysToCheck.push('TFWS');
   } else if (category === 'EWS') {
     keysToCheck.push('EWS');
+  } else if (category === 'PWD') {
+    // PWD keys: PWDOPEN, PWDOBC, PWDSC, PWDST — try all, pick best
+    keysToCheck.push('PWDOPEN', 'PWDOBC', 'PWDSC', 'PWDST');
+  } else if (category === 'DEFR') {
+    // Defence / Ex-servicemen keys
+    keysToCheck.push('DEFROPEN', 'DEFROBC');
   } else {
     const gKey = 'G' + suffix; // e.g. GOBC, GSC, GOPEN, GSEBC
     const lKey = 'L' + suffix; // e.g. LOBC, LSC, LOPEN, LSEBC
@@ -38,10 +44,13 @@ export function getStudentCutoffForCourse(
   }
 
   // Fallback: Maharashtra DSE rules allow category candidates to fill open seats
-  if (gender === 'Female') {
-    keysToCheck.push('LOPEN', 'GOPEN');
-  } else {
-    keysToCheck.push('GOPEN');
+  // (PWD and DEFR use their own open keys above; standard fallback applies to others)
+  if (category !== 'PWD' && category !== 'DEFR') {
+    if (gender === 'Female') {
+      keysToCheck.push('LOPEN', 'GOPEN');
+    } else {
+      keysToCheck.push('GOPEN');
+    }
   }
 
   // Level 1: Check category-specific keys (find the lowest/most-accessible cutoff)
@@ -168,6 +177,19 @@ export function predictColleges(
           recordBranchLower.includes('mechatronics') ||
           recordBranchLower.includes('additive manufacturing') ||
           recordBranchLower.includes('manufacturing science')
+        ) {
+          branchMatched = true;
+        }
+      }
+      const hasCivil = profile.branches.some(b => b.includes('Civil') || b.includes('Construction') || b.includes('Environmental') || b.includes('Transportation'));
+      if (hasCivil) {
+        if (
+          recordBranchLower.includes('civil') ||
+          recordBranchLower.includes('construction') ||
+          recordBranchLower.includes('environmental') ||
+          recordBranchLower.includes('transportation') ||
+          recordBranchLower.includes('structural') ||
+          recordBranchLower.includes('infrastructure')
         ) {
           branchMatched = true;
         }
@@ -394,6 +416,18 @@ export function getBranchesFromGroups(groups: string[]): string[] {
       'Manufacturing Science and Engineering',
       'Automobile Engineering',
       'Mechatronics Engineering'
+    ],
+    'Civil Group': [
+      'Civil Engineering',
+      'Civil and Infrastructure Engineering',
+      'Civil & Infrastructure Engineering',
+      'Construction Engineering',
+      'Construction Technology',
+      'Environmental Engineering',
+      'Transportation Engineering',
+      'Structural Engineering',
+      'Civil Engineering (Construction Management)',
+      'Civil Engineering (Environmental Engineering)'
     ]
   };
 
