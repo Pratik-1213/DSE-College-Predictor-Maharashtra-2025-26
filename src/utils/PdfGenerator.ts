@@ -122,8 +122,8 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
   doc.circle(ml + 11, dr1Y - 1, 0.9, 'F');
   doc.setFont('Helvetica', 'normal');
   doc.setTextColor(37, 99, 235);
-  doc.text('pratik.1213.coep@gmail.com', ml + 14, dr1Y);
-  doc.link(ml + 14, dr1Y - 3, 52, 4, { url: 'mailto:pratik.1213.coep@gmail.com' });
+  doc.text('pratik1213.coep@gmail.com', ml + 14, dr1Y);
+  doc.link(ml + 14, dr1Y - 3, 52, 4, { url: 'mailto:pratik1213.coep@gmail.com' });
 
   doc.setFillColor(71, 85, 105);
   doc.circle(ml + 95, dr1Y - 1, 0.9, 'F');
@@ -156,7 +156,7 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
     doc.setFont('Helvetica', 'normal');
     doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy - 1, { align: 'right' });
     doc.setFontSize(5.5); doc.setTextColor(203, 213, 225);
-    doc.text('Developed by Pratik Sachin Kumbhar  |  pratik.1213.coep@gmail.com', pageWidth / 2, fy + 3, { align: 'center' });
+    doc.text('Developed by Pratik Sachin Kumbhar  |  pratik1213.coep@gmail.com', pageWidth / 2, fy + 3, { align: 'center' });
   }
 
   doc.save(`DSE_Shortlist_${profile.name.replace(/\s+/g, '_')}.pdf`);
@@ -514,8 +514,8 @@ export function generatePdfReport(
   doc.circle(ml + 11, row1Y - 1, 0.9, 'F');
   doc.setFont('Helvetica', 'normal');
   doc.setTextColor(37, 99, 235);
-  doc.text('pratik.1213.coep@gmail.com', ml + 14, row1Y);
-  doc.link(ml + 14, row1Y - 3, 52, 4, { url: 'mailto:pratik.1213.coep@gmail.com' });
+  doc.text('pratik1213.coep@gmail.com', ml + 14, row1Y);
+  doc.link(ml + 14, row1Y - 3, 52, 4, { url: 'mailto:pratik1213.coep@gmail.com' });
 
   doc.setFillColor(71, 85, 105);
   doc.circle(ml + 95, row1Y - 1, 0.9, 'F');
@@ -562,7 +562,7 @@ export function generatePdfReport(
     doc.setFontSize(5.5);
     doc.setTextColor(203, 213, 225);
     doc.text(
-      'Developed by Pratik Sachin Kumbhar  |  pratik.1213.coep@gmail.com',
+      'Developed by Pratik Sachin Kumbhar  |  pratik1213.coep@gmail.com',
       pageWidth / 2, fy + 3,
       { align: 'center' }
     );
