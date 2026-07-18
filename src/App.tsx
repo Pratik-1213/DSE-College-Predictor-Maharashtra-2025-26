@@ -129,6 +129,10 @@ export default function App() {
             <p className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Developed by</p>
             <p className="font-display font-extrabold text-white text-sm">Pratik Sachin Kumbhar</p>
             <div className="space-y-1 text-[11px] font-medium">
+              <span className="flex items-center gap-1.5 text-slate-400">
+                <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 14v7"/></svg>
+                COEP Technological University, Pune
+              </span>
               <a href="mailto:pratik1213.coep@gmail.com" className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                 <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 pratik1213.coep@gmail.com

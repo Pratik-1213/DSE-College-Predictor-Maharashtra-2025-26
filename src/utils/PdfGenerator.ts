@@ -109,7 +109,7 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
-  doc.text('Full-Stack Developer  |  Kolhapur / Pune, Maharashtra', ml + 10, devY + 20);
+  doc.text('Full-Stack Developer  |  COEP Technological University, Pune  |  Kolhapur / Pune, Maharashtra', ml + 10, devY + 20);
 
   doc.setDrawColor(186, 210, 255);
   doc.setLineWidth(0.3);
@@ -156,7 +156,7 @@ export function generateShortlistPdf(profile: StudentProfile, shortlist: Predict
     doc.setFont('Helvetica', 'normal');
     doc.text(`Page ${p} of ${totalPages}`, pageWidth - mr, fy - 1, { align: 'right' });
     doc.setFontSize(5.5); doc.setTextColor(203, 213, 225);
-    doc.text('Developed by Pratik Sachin Kumbhar  |  pratik1213.coep@gmail.com', pageWidth / 2, fy + 3, { align: 'center' });
+    doc.text('Developed by Pratik Sachin Kumbhar  |  COEP Technological University, Pune  |  pratik1213.coep@gmail.com', pageWidth / 2, fy + 3, { align: 'center' });
   }
 
   doc.save(`DSE_Shortlist_${profile.name.replace(/\s+/g, '_')}.pdf`);
@@ -499,7 +499,7 @@ export function generatePdfReport(
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
-  doc.text('Full-Stack Developer  |  Kolhapur / Pune, Maharashtra', ml + 10, dy + 20);
+  doc.text('Full-Stack Developer  |  COEP Technological University, Pune  |  Kolhapur / Pune, Maharashtra', ml + 10, dy + 20);
 
   // Divider line
   doc.setDrawColor(186, 210, 255);
@@ -562,7 +562,7 @@ export function generatePdfReport(
     doc.setFontSize(5.5);
     doc.setTextColor(203, 213, 225);
     doc.text(
-      'Developed by Pratik Sachin Kumbhar  |  pratik1213.coep@gmail.com',
+      'Developed by Pratik Sachin Kumbhar  |  COEP Technological University, Pune  |  pratik1213.coep@gmail.com',
       pageWidth / 2, fy + 3,
       { align: 'center' }
     );
