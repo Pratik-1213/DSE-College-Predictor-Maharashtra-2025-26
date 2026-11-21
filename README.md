@@ -61,6 +61,8 @@ Two-page downloadable report: candidate info, top-10 recommended colleges, CAP f
 ## Project Structure
 
 ```
+tests/
+└── predictionEngine.test.ts   # Automated regression tests for admission matching
 src/
 ├── components/
 │   ├── Header.tsx             # Navigation bar
@@ -103,9 +105,10 @@ Category key lookup order: category-specific key first (e.g. `GOBC`), then lady 
 **Prerequisites:** Node.js 18+
 
 ```bash
-git clone https://github.com/your-username/dse-predictor.git
-cd dse-predictor
+git clone https://github.com/Pratik-1213/DSE-College-Predictor-Maharashtra-2025-26.git
+cd DSE-College-Predictor-Maharashtra-2025-26
 npm install
+npm test           # Run automated prediction engine unit tests
 npm run dev        # http://localhost:5173
 npm run build      # production build → dist/
 ```
