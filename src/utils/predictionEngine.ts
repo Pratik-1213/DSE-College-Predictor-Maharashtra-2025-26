@@ -1,4 +1,4 @@
-import { CollegeRecord, CutoffEntry, StudentProfile, PredictionResult, DashboardStats } from '../types';
+import type { CollegeRecord, CutoffEntry, StudentProfile, PredictionResult, DashboardStats } from '../types.ts';
 
 /**
  * Extracts the percentile value from a CutoffEntry, returning null if missing or null.
